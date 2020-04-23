@@ -1,18 +1,18 @@
 import React from 'react';
-import logo from './logo.svg';
-import EntityList from './components/EntityList'
+import logo from './logo.png';
+import Clientes from './components/Clientes'
 import HomeComponent from './components/HomeComponent'
-import Publicidades from './components/Publicidades'
+import PublicidadesList from './components/PublicidadesList'
 
 import {BrowserRouter as Router, Route, Switch, Redirect, NavLink} from "react-router-dom"
 import './App.css';
 
 function ClientesComponent() {
-  return (<EntityList entity="clientes"/>)
+  return (<Clientes entity="clientes"/>)
 }
 
 function PublicidadesComponent()  {
-  return (<Publicidades entity="publicidades"/>)
+  return (<PublicidadesList entity="publicidades"/>)
 }
 
 

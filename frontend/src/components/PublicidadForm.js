@@ -1,51 +1,98 @@
 import React from 'react';
+import { Button, Form, FormGroup, Label, Input } from 'reactstrap';
+
 
 class PublicidadForm extends React.Component {
 
-    constructor(props) {
-        super(props);
-    
-        this.handleSubmit = this.handleSubmit.bind(this);
-        this.handleChange = this.handleChange.bind(this);
-        this.state = {publicidad:props.publicidad}
-      }
+  constructor(props) {
+      super(props);
+  
+      this.handleSubmit = this.handleSubmit.bind(this);
+      this.handleChange = this.handleChange.bind(this);
+      this.state = {publicidad:props.publicidad}
+      this.estadoInicial = this.estadoInicial.bind(this);
+    }
 
-      componentWillReceiveProps(props) {
-          this.setState({publicidad: props.publicidad})
-      }
+  componentWillReceiveProps(props) {
+      this.setState({publicidad: props.publicidad})
+  }
 
-      handleChange(event) {
-        var newPublicidad = Object.assign({}, this.state.publicidad);
-        newPublicidad[event.target.name] = event.target.value;
-        this.setState({producto: newPublicidad});
-      }
 
-      handleSubmit(event) {
+  handleSubmit(event) {
+    if (this.state.publicidad._id) {
+      this.editarPublicidad();
+    } else {
+      this.agregarPublicidad();
+    }
+    event.preventDefault();
+  }
 
-        fetch('http://localhost:8888/publicidades', {
-            method: 'put',
-            headers: {
-                'Accept': 'application/json, text/plain, */*',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(this.state.publicidad)
-        }).then(res => this.props.publicidadChange(this.state.publicidad))
-          .catch(res => console.log("ERROR") );
+  handleChange(event) {
+    var newPublicidad = Object.assign({}, this.state.publicidad);
+    newPublicidad[event.target.name] = event.target.value;
+    this.setState({publicidad: newPublicidad});
+  }
+      
+  agregarPublicidad() {
+    fetch(`http://localhost:8888/publicidades`, {
+      method: "POST",
+      body: JSON.stringify(this.state.publicidad),
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json"
+      }
+    }).then(res => this.props.listado())
+      .then(this.estadoInicial);
 
-        event.preventDefault();
-      }
-    
-      render() {
-        return (
-          <form onSubmit={this.handleSubmit}>
-            <label>Nombre:</label>
-            <input type="text" name="nombre" value={this.state.publicidad.nombre} onChange={this.handleChange}/>
-            <label>Precio:</label>
-            <input type="text" name="precio" value={this.state.publicidad.precio} onChange={this.handleChange} />
-            <input type="submit" value="Submit" />
-          </form>
-        );
-      }
+  }
+
+  estadoInicial() {
+    this.setState({ fechaDeEntrada: new Date(), fechaDeSalida: new Date(), publicidad: {nombre: "", cantidadPorDia: 0 }});
+  }
+
+  editarPublicidad() {
+    fetch('http://localhost:8888/publicidades', {
+      method: 'PUT',
+      headers: {
+        'Accept': 'application/json, text/plain,*/*',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(this.state.publicidad)
+    }).then(res => this.props.publicidadChange(this.state.publicidad))
+      .then(this.estadoInicial);
+
+  }
+
+  handleSubmit(event) {
+    if (this.state.publicidad._id) {
+      this.editarPublicidad();
+    } else {
+      this.agregarPublicidad();
+    }
+    event.preventDefault();
+  }
+
+  render() {
+    return (
+      <div className="container" >
+        <Form onSubmit={this.handleSubmit}>
+          <FormGroup>
+            <Label for="nombre">Cliente</Label>
+            <Input type="text" name="nombre" value={this.state.publicidad.nombre} onChange={this.handleChange} />
+          </FormGroup>
+          <FormGroup>
+            <Label for="precio">Monto</Label>
+            <Input type="text" name="precio" value={this.state.publicidad.precio} onChange={this.handleChange} />
+          </FormGroup>
+          <FormGroup>
+            <Label for="cantidadPorDia">Veces por dia</Label>
+            <Input type="text" name="cantidadPorDia" value={this.state.publicidad.cantidadPorDia} onChange={this.handleChange} />
+          </FormGroup>
+          <Button type="submit" value="submit">Cargar</Button>
+        </Form>
+      </div>
+    );
+  }
 }
 
   export default PublicidadForm

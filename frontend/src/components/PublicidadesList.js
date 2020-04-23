@@ -1,6 +1,6 @@
 import React from 'react';
-import ProductoForm from './ProductoForm'
-import ProductoRow from './ProductoRow'
+import PublicidadForm from './PublicidadForm'
+import PublicidadRow from './PublicidadRow'
 import { Table } from 'reactstrap';
 
   class PublicidadesList extends React.Component {
@@ -10,7 +10,7 @@ import { Table } from 'reactstrap';
       this.state= { publicidades: [],selected:{}}
       this.select = this.select.bind(this);
       this.listado =this.listado.bind(this);
-      this.objetoPerdidoChange=this.objetoPerdidoChange.bind(this);
+      this.publicidadChange=this.publicidadChange.bind(this);
       this.actualizarListaDeObjetos=this.actualizarListaDeObjetos.bind(this);
     }
 
@@ -22,8 +22,7 @@ import { Table } from 'reactstrap';
       if(this.state.publicidades.length > 0) {
       return (
         <div className="objetosPerdidosCSS">
-          <h2>Publicidades</h2>
-          <ProductoForm
+          <PublicidadForm
             publicidad={this.state.selected}
             publicidadChange={this.publicidadChange}
             listado ={this.listado}
@@ -36,6 +35,7 @@ import { Table } from 'reactstrap';
                 <th>Precio</th>
                 <th>Fecha de Entrada</th>
                 <th>Fecha de Salida</th>
+                <th>Salidas por</th>
               </tr>
             </thead>
             <tbody>
@@ -61,7 +61,7 @@ import { Table } from 'reactstrap';
     renderRows() {
       return this.state.publicidades.map((unaPublicidad, index) => {
         return (
-          <ProductoRow
+          <PublicidadRow
            publicidad={unaPublicidad}
            selector={this.select} 
            actualizarListaDeObjetos={this.actualizarListaDeObjetos}
@@ -72,7 +72,7 @@ import { Table } from 'reactstrap';
     select(unaPublicidad){
       this.setState({selected:unaPublicidad})
     }
-    objetoPerdidoChange(unaPublicidad) {
+    publicidadChange(unaPublicidad) {
       this.listado();
     }
     
