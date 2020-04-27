@@ -34,8 +34,8 @@ class PublicidadRow extends React.Component {
             <tr onClick={this.selectPublicidad}>
               <td>{this.props.publicidad.nombre}</td>
               <td>{this.props.publicidad.precio}</td>
-              <td>{moment(this.props.publicidad.fechaDeEntrada).format('YYYY-M-DD')}</td>
-              <td>{moment(this.props.publicidad.fechaDeSalida).format('YYYY-M-DD')}</td>
+              <td>{moment(this.props.publicidad.fechaDeEntrada).format('DD-M-YYYY')}</td>
+              <td>{moment(this.props.publicidad.fechaDeSalida).format('DD-M-YYYY')}</td>
               <td>{this.props.publicidad.cantidadPorDia}</td>
               <td><Button color="danger" onClick={() => {
                   this.handleSubmit(this.props.publicidad._id);

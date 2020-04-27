@@ -35,7 +35,7 @@ import { Table } from 'reactstrap';
                 <th>Precio</th>
                 <th>Fecha de Entrada</th>
                 <th>Fecha de Salida</th>
-                <th>Salidas por</th>
+                <th>Salidas por dia</th>
               </tr>
             </thead>
             <tbody>

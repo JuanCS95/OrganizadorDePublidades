@@ -1,25 +1,22 @@
-import React from "react";
+import React from 'react';
 import { Button, Form, FormGroup, Label, Input } from 'reactstrap';
 
+
 class ClienteForm extends React.Component {
+
   constructor(props) {
-    super(props)
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleChange = this.handleChange.bind(this);
-    this.state = { cliente: props.cliente }
-    this.estadoInicial = this.estadoInicial.bind(this);
-  }
+      super(props);
+  
+      this.handleSubmit = this.handleSubmit.bind(this);
+      this.handleChange = this.handleChange.bind(this);
+      this.state = {cliente:props.cliente}
+      this.estadoInicial = this.estadoInicial.bind(this);
+    }
 
   componentWillReceiveProps(props) {
-    this.setState({ cliente: props.cliente })
+      this.setState({cliente: props.cliente})
   }
 
-  handleChange(event) {
-    var newCliente = Object.assign({}, this.state.cliente);
-    newCliente[event.target.name] = event.target.value;
-    const target = event.target;
-    this.setState({ cliente: newCliente });
-  }
 
   handleSubmit(event) {
     if (this.state.cliente._id) {
@@ -30,19 +27,12 @@ class ClienteForm extends React.Component {
     event.preventDefault();
   }
 
-  editarCliente() {
-    fetch('http://localhost:8888/clientes', {
-      method: 'PUT',
-      headers: {
-        'Accept': 'application/json, text/plain,*/*',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(this.state.clientes)
-    }).then(res => this.props.clienteChange(this.state.cliente))
-      .then(this.estadoInicial);
-
+  handleChange(event) {
+    var newCliente = Object.assign({}, this.state.cliente);
+    newCliente[event.target.name] = event.target.value;
+    this.setState({cliente: newCliente});
   }
-
+      
   agregarCliente() {
     fetch(`http://localhost:8888/clientes`, {
       method: "POST",
@@ -53,10 +43,33 @@ class ClienteForm extends React.Component {
       }
     }).then(res => this.props.listado())
       .then(this.estadoInicial);
+
   }
 
   estadoInicial() {
     this.setState({ cliente: { agenteComercial: "", agenciaComercial: "", direccion: "", telefono: "" } });
+  }
+
+  editarCliente() {
+    fetch('http://localhost:8888/clientes', {
+      method: 'PUT',
+      headers: {
+        'Accept': 'application/json, text/plain,*/*',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(this.state.cliente)
+    }).then(res => this.props.clienteChange(this.state.cliente))
+      .then(this.estadoInicial);
+
+  }
+
+  handleSubmit(event) {
+    if (this.state.cliente._id) {
+      this.editarCliente();
+    } else {
+      this.agregarCliente();
+    }
+    event.preventDefault();
   }
 
   render() {

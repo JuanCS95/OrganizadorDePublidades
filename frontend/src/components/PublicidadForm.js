@@ -17,7 +17,6 @@ class PublicidadForm extends React.Component {
       this.setState({publicidad: props.publicidad})
   }
 
-
   handleSubmit(event) {
     if (this.state.publicidad._id) {
       this.editarPublicidad();
@@ -47,7 +46,7 @@ class PublicidadForm extends React.Component {
   }
 
   estadoInicial() {
-    this.setState({ fechaDeEntrada: new Date(), fechaDeSalida: new Date(), publicidad: {nombre: "", cantidadPorDia: 0 }});
+    this.setState({ fechaDeEntrada: new Date(), fechaDeSalida: Date(), publicidad: {nombre: "", cantidadPorDia: 0 }});
   }
 
   editarPublicidad() {
@@ -83,6 +82,10 @@ class PublicidadForm extends React.Component {
           <FormGroup>
             <Label for="precio">Monto</Label>
             <Input type="text" name="precio" value={this.state.publicidad.precio} onChange={this.handleChange} />
+          </FormGroup>
+          <FormGroup>
+            <Label for="fechaDeSalida">Fecha de salida</Label>
+            <Input type="date" name="fechaDeSalida" value={this.state.publicidad.fechaDeSalida} onChange={this.handleChange} />
           </FormGroup>
           <FormGroup>
             <Label for="cantidadPorDia">Veces por dia</Label>

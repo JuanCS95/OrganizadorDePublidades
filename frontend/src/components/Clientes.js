@@ -7,9 +7,9 @@ class Clientes extends React.Component {
     super(props);
     this.state = { clientes: [], selected:{}}
     this.select = this.select.bind(this);
+    this.listado = this.listado.bind(this)
     this.clienteChange = this.clienteChange.bind(this);
     this.actualizarListaDeObjetos=this.actualizarListaDeObjetos.bind(this);
-    this.listado = this.listado.bind(this)
   }
 
   componentWillMount() {
