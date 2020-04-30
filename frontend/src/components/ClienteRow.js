@@ -36,6 +36,7 @@ class ClienteRow extends React.Component {
               <td>{this.props.cliente.agenciaComercial}</td>
               <td>{this.props.cliente.direccion}</td>
               <td>{this.props.cliente.telefono}</td>
+              <td>{this.props.cliente.deuda}</td>
               <td><Button color="danger" onClick={() => {
                   this.handleSubmit(this.props.cliente._id);
                   }}>Borrar</Button></td>

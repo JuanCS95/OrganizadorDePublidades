@@ -1,6 +1,5 @@
 import React from 'react';
-import { Button, Form, FormGroup, Label, Input } from 'reactstrap';
-
+import { Button, Form, FormGroup, Label, Input} from 'reactstrap';
 
 class PublicidadForm extends React.Component {
 
@@ -46,7 +45,7 @@ class PublicidadForm extends React.Component {
   }
 
   estadoInicial() {
-    this.setState({ fechaDeEntrada: new Date(), fechaDeSalida: Date(), publicidad: {nombre: "", cantidadPorDia: 0 }});
+    this.setState({ fechaDeEntrada: new Date(), publicidad: {nombre: "", precio: 0, fechaDeSalida: Date(), cantidadPorDia: 0 }});
   }
 
   editarPublicidad() {

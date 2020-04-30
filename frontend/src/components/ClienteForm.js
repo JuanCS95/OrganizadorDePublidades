@@ -92,6 +92,10 @@ class ClienteForm extends React.Component {
             <Label for="telefono">Telefono</Label>
             <Input type="text" name="telefono" value={this.state.cliente.telefono} onChange={this.handleChange} />
           </FormGroup>
+          <FormGroup>
+            <Label for="deuda">Deuda</Label>
+            <Input type="number" name="deuda" value={this.state.cliente.deuda} onChange={this.handleChange} />
+          </FormGroup>
           <Button type="submit" value="submit">Cargar</Button>
         </Form>
       </div>

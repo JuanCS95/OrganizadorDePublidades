@@ -5,6 +5,7 @@ class Cliente {
         this.agenciaComercial = agenciaComercial;
         this.direccion = direccion;
         this.telefono = telefono;
+        this.deuda = 0;
     }
 }
 
