@@ -1,11 +1,12 @@
 class Publicidad {
 
-    constructor(nombre, precio, fechaEntrada, fechaSalida, cantDia) {
-        this.nombre = nombre;
+    constructor(cliente, precio, fechaEntrada, fechaSalida, cantDia) {
+        this.cliente = cliente;
         this.precio = precio;
         this.fechaDeEntrada = fechaEntrada;
         this.fechaDeSalida = fechaSalida;
         this.cantidadPorDia = cantDia;
+        this.pagado = false;
     }
 }
 

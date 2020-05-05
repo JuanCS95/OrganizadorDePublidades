@@ -1,16 +1,23 @@
 import React from 'react';
-import { Button, Form, FormGroup, Label, Input} from 'reactstrap';
+import { Button, Form, FormGroup, Label, Input, Dropdown, DropdownItem, DropdownMenu, DropdownToggle} from 'reactstrap';
 
 class PublicidadForm extends React.Component {
 
   constructor(props) {
       super(props);
-  
+      this.dd1= false
       this.handleSubmit = this.handleSubmit.bind(this);
       this.handleChange = this.handleChange.bind(this);
       this.state = {publicidad:props.publicidad}
       this.estadoInicial = this.estadoInicial.bind(this);
+      this.dropdownToggle = this.dropdownToggle.bind(this);
     }
+
+  dropdownToggle() {
+    this.setState({
+      dd1: !this.state.dd1
+    });
+  }
 
   componentWillReceiveProps(props) {
       this.setState({publicidad: props.publicidad})
@@ -27,7 +34,7 @@ class PublicidadForm extends React.Component {
 
   handleChange(event) {
     var newPublicidad = Object.assign({}, this.state.publicidad);
-    newPublicidad[event.target.name] = event.target.value;
+    newPublicidad[event.target.name] = event.target.type === 'checkbox' ? event.target.checked : event.target.value;
     this.setState({publicidad: newPublicidad});
   }
       
@@ -76,7 +83,15 @@ class PublicidadForm extends React.Component {
         <Form onSubmit={this.handleSubmit}>
           <FormGroup>
             <Label for="nombre">Cliente</Label>
-            <Input type="text" name="nombre" value={this.state.publicidad.nombre} onChange={this.handleChange} />
+            <Dropdown className="m-b-1" isOpen={this.state.dd1} toggle={this.dropdownToggle}>
+              <DropdownToggle>
+                <Button color="danger"></Button>
+              </DropdownToggle>
+              <DropdownMenu>
+                
+              </DropdownMenu>
+            </Dropdown>
+            {/* <Input type="text" name="nombre" value={this.state.publicidad.cliente} onChange={this.handleChange} /> */}
           </FormGroup>
           <FormGroup>
             <Label for="precio">Monto</Label>
@@ -89,6 +104,14 @@ class PublicidadForm extends React.Component {
           <FormGroup>
             <Label for="cantidadPorDia">Veces por dia</Label>
             <Input type="text" name="cantidadPorDia" value={this.state.publicidad.cantidadPorDia} onChange={this.handleChange} />
+          </FormGroup>
+          <FormGroup >
+            <Label for="pagado">Pagó</Label>
+            <input
+              name="pagado"
+              type="checkbox"
+              checked={this.state.publicidad.pagado}
+              onChange={this.handleChange}></input>
           </FormGroup>
           <Button type="submit" value="submit">Cargar</Button>
         </Form>

@@ -14,6 +14,25 @@ class MongoDBHome {
         })
     }
 
+    agregarCliente(publicidadId, cliente, callback) {
+        var objectId = mongoDriver.ObjectID(publicidadId)
+        this.publicidades.findOne({"_id":objectId})( (error, publicidad)=>{
+            if(error)
+                callback("error")
+            else {
+                publicidad.cliente.push(cliente)
+                this.publicidad.replaceOne({"_id":objectId}, publicidad, (error, result)=>{
+                    if(error)
+                        callback("error")
+                    else {
+                        console.log(`Resultado de actualizar: ${JSON.stringify(result)}`)
+                        callback("ok", publicidad)
+                    }
+                })
+            }
+        })
+    }
+
     delete(elementId) {
         var objectId = mongoDriver.ObjectID(elementId);
         this.persistentCollection.deleteOne({"_id" : objectId}, (error, result)=>{

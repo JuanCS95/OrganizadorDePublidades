@@ -1,6 +1,7 @@
 express = require("express");
 bodyParser = require("body-parser");
 var cors = require('cors');
+mongoHome = require('./src/mongo/mongoHome');
 
 var homes = {}
 
@@ -26,6 +27,22 @@ function init() {
   })
 
   server.use(cors())
+
+
+  server.post("/publicidades/:id", (req, res) => {
+    publicidadHome = new mongoHome(db)
+    publicidadId = req.params.id
+    tx = req.body
+    publicidadHome.agregarCliente(publicidadId, cliente, (result, publicidad) => {
+      if (result == "error") {
+        res.status(400).end();
+      } else {
+        res.status(200).send(publicidad);
+      }
+    }) 
+  })
+
+
 
   server.get("/:type", (req, res) => {
     home = homes[req.params.type]
