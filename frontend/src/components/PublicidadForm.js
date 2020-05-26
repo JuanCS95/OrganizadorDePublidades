@@ -1,6 +1,8 @@
 import React from 'react';
 import { Button, Form, FormGroup, Label, Input} from 'reactstrap';
 import { Multiselect } from 'multiselect-react-dropdown';
+var moment = require('moment');
+
 
 class PublicidadForm extends React.Component {
 
@@ -9,7 +11,7 @@ class PublicidadForm extends React.Component {
       this.handleSubmit = this.handleSubmit.bind(this);
       this.handleChange = this.handleChange.bind(this);
       this.state = {  
-                      clientes: ["fede","vale"],
+                      clientes: [],
                       cliente:"",
                       publicidad:this.props.publicidad,
                       dias:[{name:'Lunes', id:1},{name:'Martes', id:2},{name:'Miercoles', id:3},{name:'Jueves', id:4},{name:'Viernes', id:5},{name:'Sabado', id:6}]}
@@ -22,14 +24,15 @@ class PublicidadForm extends React.Component {
       console.log("soy el props",props.publicidad.cliente)
   }
 
-  // componentWillMount(){
-  //   this.estadoInicial();
-  // }
+  componentWillMount(){
+     this.estadoInicial();
+     this.listadoClientes();
+  }
 
   listadoClientes(){
     fetch(`http://localhost:8888/clientes`)
       .then( res => res.json())
-      .then( prds => this.setState({clientes: prds}));
+      .then( clientes => this.setState({clientes: clientes}));
   }
 
   handleSubmit(event) {
@@ -61,7 +64,22 @@ class PublicidadForm extends React.Component {
   }
 
   estadoInicial() {
-    this.setState({ fechaDeEntrada: new Date(), publicidad: {cliente:{agenciaComercial:" ", deuda:0}, nombre: "", precio: 0, fechaDeSalida: Date(), cantidadPorDia: 0, tiemposDeSalida: [], dias:[] }});
+    this.setState(
+      { fechaDeEntrada: new Date(), 
+        publicidad: { 
+                      cliente: {
+                                  agenciaComercial:" ", 
+                                  deuda:0
+                                }, 
+                      nombre: "", 
+                      precio: 0, 
+                      fechaDeSalida: new Date(), 
+                      cantidadPorDia: 0, 
+                      tiemposDeSalida: [], 
+                      dias:[] 
+                    }
+        }
+    );
   }
 
   editarPublicidad() {
@@ -79,11 +97,9 @@ class PublicidadForm extends React.Component {
 
 
   render() {
-    let mostrarClientesList = this.state.clientes.map((prod) => {
+    let mostrarClientesList = this.state.clientes.map((cliente) => {
       return(
-          <div>
-              <option value={prod} />
-          </div>
+          <option value={cliente.agenciaComercial} />
       );
   });
     return (
@@ -91,9 +107,9 @@ class PublicidadForm extends React.Component {
         <Form onSubmit={this.handleSubmit}>
           <FormGroup>
             <Label for="nombre">Cliente</Label>
-            <input type="text" value={this.state.cliente.agenciaComercial} onChange={this.handleChange} />
+            <input list="clientes" type="text" value={this.state.cliente.agenciaComercial} onChange={this.handleChange} />
             <datalist id="clientes">
-              {this.state.clientes}
+              {mostrarClientesList}
             </datalist>
           </FormGroup>
           <FormGroup>
@@ -102,7 +118,7 @@ class PublicidadForm extends React.Component {
           </FormGroup>
           <FormGroup>
             <Label for="fechaDeSalida">Fecha de salida</Label>
-            <Input type="date" name="fechaDeSalida" value={this.state.publicidad.fechaDeSalida} onChange={this.handleChange} />
+            <Input type="date" name="fechaDeSalida" value={moment(this.state.publicidad.fechaDeSalida).format('YYYY-MM-DD')} onChange={this.handleChange} />
           </FormGroup>
           <FormGroup>
             <Label for="cantidadPorDia">Veces por dia</Label>
