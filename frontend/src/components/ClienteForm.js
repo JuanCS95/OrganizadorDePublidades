@@ -63,15 +63,6 @@ class ClienteForm extends React.Component {
 
   }
 
-  handleSubmit(event) {
-    if (this.state.cliente._id) {
-      this.editarCliente();
-    } else {
-      this.agregarCliente();
-    }
-    event.preventDefault();
-  }
-
   render() {
     return (
       <div className="container" >

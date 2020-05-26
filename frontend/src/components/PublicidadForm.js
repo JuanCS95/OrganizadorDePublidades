@@ -1,26 +1,35 @@
 import React from 'react';
-import { Button, Form, FormGroup, Label, Input, Dropdown, DropdownItem, DropdownMenu, DropdownToggle} from 'reactstrap';
+import { Button, Form, FormGroup, Label, Input} from 'reactstrap';
+import { Multiselect } from 'multiselect-react-dropdown';
 
 class PublicidadForm extends React.Component {
 
   constructor(props) {
       super(props);
-      this.dd1= false
       this.handleSubmit = this.handleSubmit.bind(this);
       this.handleChange = this.handleChange.bind(this);
-      this.state = {publicidad:props.publicidad}
+      this.state = {  
+                      clientes: ["fede","vale"],
+                      cliente:"",
+                      publicidad:this.props.publicidad,
+                      dias:[{name:'Lunes', id:1},{name:'Martes', id:2},{name:'Miercoles', id:3},{name:'Jueves', id:4},{name:'Viernes', id:5},{name:'Sabado', id:6}]}
       this.estadoInicial = this.estadoInicial.bind(this);
-      this.dropdownToggle = this.dropdownToggle.bind(this);
     }
-
-  dropdownToggle() {
-    this.setState({
-      dd1: !this.state.dd1
-    });
-  }
 
   componentWillReceiveProps(props) {
       this.setState({publicidad: props.publicidad})
+      this.setState({cliente: props.publicidad.cliente})
+      console.log("soy el props",props.publicidad.cliente)
+  }
+
+  // componentWillMount(){
+  //   this.estadoInicial();
+  // }
+
+  listadoClientes(){
+    fetch(`http://localhost:8888/clientes`)
+      .then( res => res.json())
+      .then( prds => this.setState({clientes: prds}));
   }
 
   handleSubmit(event) {
@@ -47,12 +56,12 @@ class PublicidadForm extends React.Component {
         "Content-Type": "application/json"
       }
     }).then(res => this.props.listado())
-      .then(this.estadoInicial);
+      .then(this.estadoInicial());
 
   }
 
   estadoInicial() {
-    this.setState({ fechaDeEntrada: new Date(), publicidad: {nombre: "", precio: 0, fechaDeSalida: Date(), cantidadPorDia: 0 }});
+    this.setState({ fechaDeEntrada: new Date(), publicidad: {cliente:{agenciaComercial:" ", deuda:0}, nombre: "", precio: 0, fechaDeSalida: Date(), cantidadPorDia: 0, tiemposDeSalida: [], dias:[] }});
   }
 
   editarPublicidad() {
@@ -64,34 +73,28 @@ class PublicidadForm extends React.Component {
       },
       body: JSON.stringify(this.state.publicidad)
     }).then(res => this.props.publicidadChange(this.state.publicidad))
-      .then(this.estadoInicial);
+      .then(this.estadoInicial());
 
   }
 
-  handleSubmit(event) {
-    if (this.state.publicidad._id) {
-      this.editarPublicidad();
-    } else {
-      this.agregarPublicidad();
-    }
-    event.preventDefault();
-  }
 
   render() {
+    let mostrarClientesList = this.state.clientes.map((prod) => {
+      return(
+          <div>
+              <option value={prod} />
+          </div>
+      );
+  });
     return (
       <div className="container" >
         <Form onSubmit={this.handleSubmit}>
           <FormGroup>
             <Label for="nombre">Cliente</Label>
-            <Dropdown className="m-b-1" isOpen={this.state.dd1} toggle={this.dropdownToggle}>
-              <DropdownToggle>
-                <Button color="danger"></Button>
-              </DropdownToggle>
-              <DropdownMenu>
-                
-              </DropdownMenu>
-            </Dropdown>
-            {/* <Input type="text" name="nombre" value={this.state.publicidad.cliente} onChange={this.handleChange} /> */}
+            <input type="text" value={this.state.cliente.agenciaComercial} onChange={this.handleChange} />
+            <datalist id="clientes">
+              {this.state.clientes}
+            </datalist>
           </FormGroup>
           <FormGroup>
             <Label for="precio">Monto</Label>
@@ -104,6 +107,14 @@ class PublicidadForm extends React.Component {
           <FormGroup>
             <Label for="cantidadPorDia">Veces por dia</Label>
             <Input type="text" name="cantidadPorDia" value={this.state.publicidad.cantidadPorDia} onChange={this.handleChange} />
+          </FormGroup>
+          <FormGroup>
+          <Label for="Dias">Dias de la Semana</Label>
+          <Multiselect
+            options={this.state.dias} // Options to display in the dropdown
+            selectedValues={this.handleChange} // Preselected value to persist in dropdown
+            displayValue="name" // Property name to display in the dropdown options
+            />
           </FormGroup>
           <FormGroup >
             <Label for="pagado">Pagó</Label>

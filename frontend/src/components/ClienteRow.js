@@ -1,8 +1,6 @@
 import React from 'react';
 import { Button } from 'reactstrap';
 
-var moment = require('moment');
-
 class ClienteRow extends React.Component {
 
     constructor(props) {

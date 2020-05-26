@@ -8,7 +8,7 @@ import { Table } from 'reactstrap';
     constructor(props) {
       super(props);
       this.state= { publicidades: [],selected:{}}
-      this.select = this.select.bind(this);
+      this.selector = this.selector.bind(this);
       this.listado =this.listado.bind(this);
       this.publicidadChange=this.publicidadChange.bind(this);
       this.actualizarListaDeObjetos=this.actualizarListaDeObjetos.bind(this);
@@ -26,6 +26,7 @@ import { Table } from 'reactstrap';
             publicidad={this.state.selected}
             publicidadChange={this.publicidadChange}
             listado ={this.listado}
+            listadoClientes={this.listadoClientes}
           />
           
           <Table className="table" striped>
@@ -35,8 +36,10 @@ import { Table } from 'reactstrap';
                 <th>Precio</th>
                 <th>Fecha de Entrada</th>
                 <th>Fecha de Salida</th>
-                <th>Salidas por dia</th>
+                <th>Salidas por Dia</th>
                 <th>Estado</th>
+                <th>Dias de Salida</th>
+                <th>Horarios de Salida</th>
               </tr>
             </thead>
             <tbody>
@@ -64,13 +67,13 @@ import { Table } from 'reactstrap';
         return (
           <PublicidadRow
            publicidad={unaPublicidad}
-           selector={this.select} 
+           selector={this.selector} 
            actualizarListaDeObjetos={this.actualizarListaDeObjetos}
            />
         );
       })
     }
-    select(unaPublicidad){
+    selector(unaPublicidad){
       this.setState({selected:unaPublicidad})
     }
     publicidadChange(unaPublicidad) {
@@ -82,7 +85,6 @@ import { Table } from 'reactstrap';
         .then( res => res.json())
         .then( prds => this.setState({publicidades: prds}));
     }
-
 
     actualizarListaDeObjetos(unaPublicidad) {
       var publicidadActualizada = this.state.publicidades.filter(

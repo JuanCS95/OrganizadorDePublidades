@@ -38,6 +38,8 @@ class PublicidadRow extends React.Component {
               <td>{moment(this.props.publicidad.fechaDeSalida).format('DD-M-YYYY')}</td>
               <td>{this.props.publicidad.cantidadPorDia}</td>
               <td>{this.props.publicidad.pagado ? "Pagado" : "Adeuda" }  </td>
+              <td>{this.props.publicidad.tiemposDeSalida}</td>
+              <td>{this.props.publicidad.dias}</td>
               <td><Button color="danger" onClick={() => {
                   this.handleSubmit(this.props.publicidad._id);
                   }}>Borrar</Button></td>
