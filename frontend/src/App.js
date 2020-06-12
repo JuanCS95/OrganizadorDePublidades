@@ -3,7 +3,7 @@ import logo from './logo.png';
 import Clientes from './components/Clientes'
 import HomeComponent from './components/HomeComponent'
 import PublicidadesList from './components/PublicidadesList'
-
+import PublicidadForm from './components/PublicidadForm'
 import {BrowserRouter as Router, Route, Switch, Redirect, NavLink} from "react-router-dom"
 import './App.css';
 
@@ -15,6 +15,9 @@ function PublicidadesComponent()  {
   return (<PublicidadesList entity="publicidades"/>)
 }
 
+function PublicidadFormComponent()  {
+  return (<PublicidadForm entity="publicidad"/>)
+}
 
 function App() {
   return (
@@ -26,6 +29,7 @@ function App() {
           <li><NavLink to="/">Home</NavLink></li>
           <li><NavLink to="/clientes">Clientes</NavLink></li>
           <li><NavLink to="/publicidades">publicidades</NavLink></li>
+          <li><NavLink to="/nuevaPublicidad">Agregar Publicidad</NavLink></li>
         </ul>
       </header>
       <main className="App-main">
@@ -33,6 +37,7 @@ function App() {
             <Route path="/" exact component={HomeComponent} />
             <Route path="/clientes"  component={ClientesComponent} />
             <Route path="/publicidades" component={PublicidadesComponent} />
+            <Route path="/nuevaPublicidad" component={PublicidadFormComponent} />
             <Redirect to="/" />
           </Switch>
       </main>

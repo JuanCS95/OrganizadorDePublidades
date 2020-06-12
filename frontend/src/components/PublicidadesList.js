@@ -1,7 +1,8 @@
 import React from 'react';
 import PublicidadForm from './PublicidadForm'
 import PublicidadRow from './PublicidadRow'
-import { Table } from 'reactstrap';
+import { Table, Button } from 'reactstrap'
+
 
   class PublicidadesList extends React.Component {
 
@@ -22,12 +23,12 @@ import { Table } from 'reactstrap';
       if(this.state.publicidades.length > 0) {
       return (
         <div className="objetosPerdidosCSS">
-          <PublicidadForm
+          {/* <PublicidadForm
             publicidad={this.state.selected}
             publicidadChange={this.publicidadChange}
             listado ={this.listado}
             listadoClientes={this.listadoClientes}
-          />
+          /> */}
           
           <Table className="table" striped>
             <thead>
@@ -46,11 +47,12 @@ import { Table } from 'reactstrap';
               {this.renderRows()}
             </tbody>
           </Table>
-        </div>
+         </div>
       );
     }
     else {
-      return (<p> Cargando {this.props.entity} </p>);
+      return (
+      <p>Cargando {this.props.entity} </p>);
     }
     }
 

@@ -7,7 +7,7 @@ class Publicidad {
         this.fechaDeSalida = fechaSalida;
         this.cantidadPorDia = cantDia;
         this.pagado = false;
-        this.tiemposDeSalida = horarios;
+        this.horariosDeSalida = horarios;
         this.dias = dias;
     }
 }

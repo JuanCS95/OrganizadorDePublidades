@@ -12,6 +12,7 @@ class presupuestador {
         this.porcentajeJueves = 1
         this.porcentajeViernes = 1
         this.porcentajeSabado = 1
+        this.porcentajeDomingo = 3
         this.porcentajeMadrugada = 0.7
         this.porcentajeMedioDia = 0.6
         this.porcentajeTarde = 0.5
