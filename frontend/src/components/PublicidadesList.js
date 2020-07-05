@@ -1,7 +1,6 @@
 import React from 'react';
-import PublicidadForm from './PublicidadForm'
 import PublicidadRow from './PublicidadRow'
-import { Table, Button } from 'reactstrap'
+import { Table} from 'reactstrap'
 
 
   class PublicidadesList extends React.Component {
@@ -34,11 +33,11 @@ import { Table, Button } from 'reactstrap'
             <thead>
               <tr>
                 <th>Agencia</th>
-                <th>Precio</th>
-                <th>Fecha de Entrada</th>
-                <th>Fecha de Salida</th>
-                <th>Salidas por Dia</th>
+                <th>Fecha de entrada</th>
+                <th>Fecha de salida</th>
+                <th>Salidas p/ dia</th>
                 <th>Estado</th>
+                <th>Precio</th>
                 <th>Dias de Salida</th>
                 <th>Horarios de Salida</th>
               </tr>

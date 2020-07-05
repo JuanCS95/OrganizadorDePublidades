@@ -4,7 +4,7 @@ class presupuestador {
     constructor(precioSemana,precioMes, precioDia,vezDia){
         this.precioPorSemana = precioSemana;
         this.precioPorMes = precioMes;
-        this.precioBaseporDia = precioDia;
+        this.precioPorDia = precioDia;
         this.vezPorDia = vezDia;
         this.porcentajeLunes = 2
         this.porcentajeMartes = 2
@@ -17,6 +17,18 @@ class presupuestador {
         this.porcentajeMedioDia = 0.6
         this.porcentajeTarde = 0.5
         this.porcentajeNoche = 0.5
+    }
+    
+    calcularPrecioporVez(){
+        return 2 * this.vezPorDia;
+    }
+
+    calcularPrecioPorSemana(event){
+        this.presupuestoFinal += event* this.precioPorSemana;
+    }
+
+    calcularPrecioPorDia(event){
+        this.presupuestoFinal += event * this.precioPorDia;
     }
 }
 

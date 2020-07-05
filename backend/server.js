@@ -1,6 +1,7 @@
 express = require("express");
 bodyParser = require("body-parser");
 var cors = require('cors');
+const presupuestador = require("./src/modelo/presupuestador");
 mongoHome = require('./src/mongo/mongoHome');
 
 var homes = {}
@@ -14,19 +15,31 @@ function register(home) {
 function init() {
   var server = express();
   server.use(bodyParser.json());
-
+  
+  
+  
+  
   server.use("(/:type/*)|(/:type)", (req, res, next) => {
-      if (!homes[req.params.type]) {
-          console.log(` home de ${req.params.type} no existe`  )
-          res.status(404).end()
-      }
-      else {
-        console.log(` home de ${req.params.type} si existe `  )
-        next()
-      }
+    if (!homes[req.params.type]) {
+      console.log(` home de ${req.params.type} no existe`  )
+      res.status(404).end()
+    }
+    else {
+      console.log(` home de ${req.params.type} si existe `  )
+      next()
+    }
   })
+  
+  server.use(cors());
 
-  server.use(cors())
+  server.get("/presupuestos/presupuestar", (req, res) => {
+    console.log("estoy presupuestando")
+    home = homes[req.params.type]
+    home.all((allObjects) => {
+        res.send(2)
+        res.json(allObjects)
+        res.end() })
+  })
 
 
   server.post("/publicidades/:id", (req, res) => {
@@ -42,14 +55,13 @@ function init() {
     }) 
   })
 
-
-
   server.get("/:type", (req, res) => {
     home = homes[req.params.type]
     home.all((allObjects) => {
         res.json(allObjects) 
         res.end() })       
   })
+
 
   server.get("/:type/:id", (req, res) => {
     home = homes[req.params.type]
