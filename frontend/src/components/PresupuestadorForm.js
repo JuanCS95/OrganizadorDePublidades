@@ -15,9 +15,9 @@ class PresupuestadorForm extends React.Component{
     }
 
     presupuestador(){
-        fetch(`http://localhost:8888/presupuestos`)
+        fetch(`http://localhost:8888/presupuestador`)
           .then(res => res.json())
-          .then(presupuestador => this. setState({presupuestador: presupuestador}))
+          .then(presupuestador => this. setState({presupuestador: presupuestador[0]}))
       }
 
     componentWillReceiveProps(props) {
@@ -45,7 +45,7 @@ class PresupuestadorForm extends React.Component{
       }
 
     agregarPresupuestador() {
-    fetch(`http://localhost:8888/presupuestos`, {
+    fetch(`http://localhost:8888/presupuestador`, {
         method: "POST",
         body: JSON.stringify(this.state.presupuestador),
         headers: {
@@ -56,7 +56,7 @@ class PresupuestadorForm extends React.Component{
     }
 
     editarPresupuestador() {
-        fetch('http://localhost:8888/presupuestos', {
+        fetch('http://localhost:8888/presupuestador', {
           method: 'PUT',
           headers: {
             'Accept': 'application/json, text/plain,*/*',
@@ -72,63 +72,63 @@ class PresupuestadorForm extends React.Component{
                 <Form onSubmit={this.handleSubmit}></Form>
                 <FormGroup>
                     <Label for="vezPorDia">Precio Base por Dia</Label>
+                    <input type="number" value={this.state.presupuestador.precioPorDia} onChange={this.handleChange}/>
+                </FormGroup>
+                <FormGroup>
+                    <Label for="preciopSemana">Precio Base por semana</Label>
+                    <input type="number" value={this.state.presupuestador.precioPorSemana} onChange={this.handleChange}/>
+                </FormGroup>
+                 <FormGroup>
+                    <Label for="preciopMes">Precio Base Por Mes</Label>
+                    <input type="number" value={this.state.presupuestador.precioPorMes} onChange={this.handleChange}/>
+                </FormGroup>
+                <FormGroup>
+                    <Label for="preciopVez">Porcentaje por vez</Label>
                     <input type="number" value={this.state.presupuestador.vezPorDia} onChange={this.handleChange}/>
                 </FormGroup>
                 <FormGroup>
-                    <Label for="preciopDia">Precio Base por semana</Label>
-                    <input type="number" onChange={this.handleChange}/>
-                </FormGroup>
-                 <FormGroup>
-                    <Label for="preciopDia">Precio Base Por Mes</Label>
-                    <input type="number" onChange={this.handleChange}/>
+                    <Label for="precioLunes">Porcenaje Lunes</Label>
+                    <input type="number" value={this.state.presupuestador.porcentajeLunes} onChange={this.handleChange}/>
                 </FormGroup>
                 <FormGroup>
-                    <Label for="preciopDia">Porcentaje por vez</Label>
-                    <input type="number" onChange={this.handleChange}/>
+                    <Label for="precioMartes">Porcenaje Martes</Label>
+                    <input type="number" value={this.state.presupuestador.porcentajeMartes} onChange={this.handleChange}/>
                 </FormGroup>
                 <FormGroup>
-                    <Label for="preciopDia">Porcenaje Lunes</Label>
-                    <input type="number" onChange={this.handleChange}/>
+                    <Label for="precioMiercoles">Porcenaje Miercoles</Label>
+                    <input type="number" value={this.state.presupuestador.porcentajeMiercoles} onChange={this.handleChange}/>
                 </FormGroup>
                 <FormGroup>
-                    <Label for="preciopDia">Porcenaje Martes</Label>
-                    <input type="number" onChange={this.handleChange}/>
+                    <Label for="precioJueves">Porcenaje Jueves</Label>
+                    <input type="number" value={this.state.presupuestador.porcentajeJueves} onChange={this.handleChange}/>
                 </FormGroup>
                 <FormGroup>
-                    <Label for="preciopDia">Porcenaje Miercoles</Label>
-                    <input type="number" onChange={this.handleChange}/>
+                    <Label for="precioViernes">Porcenaje Viernes</Label>
+                    <input type="number" value={this.state.presupuestador.porcentajeViernes} onChange={this.handleChange}/>
                 </FormGroup>
                 <FormGroup>
-                    <Label for="preciopDia">Porcenaje Jueves</Label>
-                    <input type="number" onChange={this.handleChange}/>
+                    <Label for="precioSabado">Porcenaje Sabado</Label>
+                    <input type="number" value={this.state.presupuestador.porcentajeSabado} onChange={this.handleChange}/>
                 </FormGroup>
                 <FormGroup>
-                    <Label for="preciopDia">Porcenaje Viernes</Label>
-                    <input type="number" onChange={this.handleChange}/>
+                    <Label for="precioDomingo">Porcenaje Domingo</Label>
+                    <input type="number" value={this.state.presupuestador.porcentajeDomingo} onChange={this.handleChange}/>
                 </FormGroup>
                 <FormGroup>
-                    <Label for="preciopDia">Porcenaje Sabado</Label>
-                    <input type="number" onChange={this.handleChange}/>
+                    <Label for="precioMadrugada">Porcenaje Madrugada</Label>
+                    <input type="number" value={this.state.presupuestador.porcentajeMadrugada} onChange={this.handleChange}/>
                 </FormGroup>
                 <FormGroup>
-                    <Label for="preciopDia">Porcenaje Domingo</Label>
-                    <input type="number" onChange={this.handleChange}/>
+                    <Label for="precioMediodia">Porcenaje Mediodia</Label>
+                    <input type="number" value={this.state.presupuestador.porcentajeMedioDia} onChange={this.handleChange}/>
                 </FormGroup>
                 <FormGroup>
-                    <Label for="preciopDia">Porcenaje Madrugada</Label>
-                    <input type="number" onChange={this.handleChange}/>
+                    <Label for="precioTarde">Porcenaje Tarde</Label>
+                    <input type="number"  value={this.state.presupuestador.porcentajeTarde} onChange={this.handleChange}/>
                 </FormGroup>
                 <FormGroup>
-                    <Label for="preciopDia">Porcenaje Mediodia</Label>
-                    <input type="number"  onChange={this.handleChange}/>
-                </FormGroup>
-                <FormGroup>
-                    <Label for="preciopDia">Porcenaje Tarde</Label>
-                    <input type="number"  onChange={this.handleChange}/>
-                </FormGroup>
-                <FormGroup>
-                    <Label for="preciopDia">Porcenaje Noche</Label>
-                    <input type="number"  onChange={this.handleChange}/>
+                    <Label for="precioNoche">Porcenaje Noche</Label>
+                    <input type="number" value={this.state.presupuestador.porcentajeNoche} onChange={this.handleChange}/>
                 </FormGroup>
                 <Button type="submit" value="submit">Actualizar</Button>
             </div>

@@ -1,35 +1,35 @@
-
-class presupuestador {
-
-    constructor(precioSemana,precioMes, precioDia,vezDia){
-        this.precioPorSemana = precioSemana;
-        this.precioPorMes = precioMes;
-        this.precioPorDia = precioDia;
-        this.vezPorDia = vezDia;
-        this.porcentajeLunes = 2
-        this.porcentajeMartes = 2
-        this.porcentajeMiercoles = 2
-        this.porcentajeJueves = 1
-        this.porcentajeViernes = 1
-        this.porcentajeSabado = 1
-        this.porcentajeDomingo = 3
-        this.porcentajeMadrugada = 0.7
-        this.porcentajeMedioDia = 0.6
-        this.porcentajeTarde = 0.5
-        this.porcentajeNoche = 0.5
+// var Document = require('camo').Document;
+class Presupuestador {
+    constructor(pSemana, pMes, pDia, pVez, pLunes, pMartes, pMiercoles, pJueves, pViernes, pSabado, pDomingo, pMadrugada, pMediodia, pTarde, pNoche){
+        // super();
+        // if (Presupuestador.instance) {
+        //     throw new Error("Singleton classes can't be instantiated more than once.")
+        //   }
+        // Presupuestador.instance = this;
+        this.precioPorSemana = pSemana;
+        this.precioPorMes = pMes;
+        this.precioPorDia = pDia;
+        this.vezPorDia = pVez;
+        this.porcentajeLunes = pLunes;
+        this.porcentajeMartes = pMartes;
+        this.porcentajeMiercoles = pMiercoles;
+        this.porcentajeJueves = pJueves;
+        this.porcentajeViernes = pViernes;
+        this.porcentajeSabado = pSabado;
+        this.porcentajeDomingo = pDomingo;
+        this.porcentajeMadrugada = pMadrugada;
+        this.porcentajeMedioDia = pMediodia;
+        this.porcentajeTarde = pTarde;
+        this.porcentajeNoche = pNoche;
     }
-    
-    calcularPrecioporVez(){
-        return 2 * this.vezPorDia;
-    }
+calcularPrecioporVez(){return 2 * this.vezPorDia;}
+calcularPrecioPorSemana(event){return event* this.precioPorSemana;}
+calcularPrecioPorDia(event){return event * this.precioPorDia;}
 
-    calcularPrecioPorSemana(event){
-        this.presupuestoFinal += event* this.precioPorSemana;
-    }
-
-    calcularPrecioPorDia(event){
-        this.presupuestoFinal += event * this.precioPorDia;
-    }
 }
+// const instance = new Presupuestador();
+// Object.freeze(instance);
 
-module.exports = presupuestador;
+// module.exports = instance;
+
+module.exports = Presupuestador;

@@ -38,10 +38,10 @@ class PublicidadRow extends React.Component {
               <td>{moment(this.props.publicidad.fechaDeEntrada).format('DD-M-YYYY')}</td>
               <td>{moment(this.props.publicidad.fechaDeSalida).format('DD-M-YYYY')}</td>
               <td>{this.props.publicidad.cantidadPorDia}</td>
-              <td>{this.props.publicidad.pagado ? "Pagado" : "Adeuda" }  </td>
-              <td>{this.props.publicidad.precio}</td>
               <td>{this.props.publicidad.dias}</td>
               <td>{this.props.publicidad.horariosDeSalida}</td>
+              <td>{this.props.publicidad.precio}</td>
+              <td>{this.props.publicidad.pagado ? "Pagado" : "Adeuda" }  </td>
               <td><Button color="primary" onClick={() => {
                     
                   }}>Editar/Cobrar</Button>

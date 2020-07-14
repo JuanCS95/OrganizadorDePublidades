@@ -36,10 +36,10 @@ import { Table} from 'reactstrap'
                 <th>Fecha de entrada</th>
                 <th>Fecha de salida</th>
                 <th>Salidas p/ dia</th>
-                <th>Estado</th>
-                <th>Precio</th>
                 <th>Dias de Salida</th>
                 <th>Horarios de Salida</th>
+                <th>Precio</th>
+                <th>Estado</th>
               </tr>
             </thead>
             <tbody>

@@ -1,11 +1,43 @@
 express = require("express");
 bodyParser = require("body-parser");
-var cors = require('cors');
-const presupuestador = require("./src/modelo/presupuestador");
+PresupuestadorHome = require("./src/mongo/presupuestadorHome");
 mongoHome = require('./src/mongo/mongoHome');
+Presupuestador = require("./src/modelo/presupuestador")
+var cors = require('cors');
+
+var connect = require('camo').connect;
+
+var db
+
+var database;
+var uri = 'mongodb://localhost:27017/radio';
+connect(uri).then(function(db) {
+    database = db;
+});
+
+
 
 var homes = {}
 
+// presupuestadorRadio = Presupuestador.create({
+//       precioPorSemana:500,
+//       precioPorMes: 1000, 
+//       precioPorDia: 100, 
+//       vezPorDia: 50, 
+//       porcentajeLunes: 2,
+//       porcentajeMartes: 1,
+//       porcentajeMiercoles: 1,
+//       porcentajeJueves: 1,
+//       porcentajeViernes: 1,
+//       porcentajeSabado: 2,
+//       porcentajeDomingo: 3,
+//       porcentajeMadrugada: 0.5, 
+//       porcentajeMedioDia: 0.2, 
+//       porcentajeTarde: 0.1, 
+//       porcentajeNoche: 0.1})
+//   presupuestadorRadio.save().then(function(l) {
+//       console.log(l._id);
+//   });
 
 function register(home) {
   console.log(`registering handlers for ${home.type}`)
@@ -16,7 +48,8 @@ function init() {
   var server = express();
   server.use(bodyParser.json());
   
-  
+  server.use(cors());
+
   
   
   server.use("(/:type/*)|(/:type)", (req, res, next) => {
@@ -30,17 +63,17 @@ function init() {
     }
   })
   
-  server.use(cors());
+  
 
-  server.get("/presupuestos/presupuestar", (req, res) => {
+  server.get("/presupuestador/presupuestar", (req, res) => {
     console.log("estoy presupuestando")
-    home = homes[req.params.type]
-    home.all((allObjects) => {
-        res.send(2)
+    home = homes["presupuestador"]
+    home.calcularPresupuesto((allObjects) => {
+        console.log(allObjects)
         res.json(allObjects)
         res.end() })
-  })
-
+    console.log("res" + res)
+      })
 
   server.post("/publicidades/:id", (req, res) => {
     publicidadHome = new mongoHome(db)

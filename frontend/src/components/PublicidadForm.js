@@ -10,22 +10,21 @@ class PublicidadForm extends React.Component {
       super(props);
       this.handleSubmit = this.handleSubmit.bind(this);
       this.handleChange = this.handleChange.bind(this);
-      this.handleChange2 = this.handleChange2.bind(this);
-      this.handleChange3 = this.handleChange3.bind(this);
+      this.handleDias = this.handleDias.bind(this);
+      this.handleHorarios = this.handleHorarios.bind(this);
       this.recalcularPresupuesto = this.recalcularPresupuesto.bind(this);
-
       this.handlePresupuesto = this.handlePresupuesto.bind(this);
       this.state = {  
-                      selectedDias: [],
-                      selectedTimes: [],
-                      clientes: [],
                       cliente:"",
-                      publicidad:this.props.publicidad,
+                      clientes: [],
+                      cantidadPorDia: '',
+                      selectedDias: [],
                       dias:[{name:'Lunes', id:1},{name:'Martes', id:2},{name:'Miercoles', id:3},{name:'Jueves', id:4},{name:'Viernes', id:5},{name:'Sabado', id:6}, {name: 'Domingo', id:7}],
+                      selectedTimes: [],
                       horarios: [{name:'Madrugada', id:1}, {name:'Mañana', id:2}, {name: 'Mediodia', id:3}, {name: 'Tarde', id:4}, {name: 'Noche', id:5}],
                       presupuesto: '',
-                      cantidadPorDia: '',
-                      presupuestador: ""
+                      presupuestador: '',
+                      publicidad:this.props.publicidad
                     }
       this.estadoInicial = this.estadoInicial.bind(this);
     }
@@ -33,7 +32,6 @@ class PublicidadForm extends React.Component {
   componentWillReceiveProps(props) {
       this.setState({publicidad: props.publicidad})
       this.setState({cliente: props.publicidad.cliente})
-      this.setState({presupuestador: props.presupuestador})
   }
 
   componentWillMount(){
@@ -41,8 +39,6 @@ class PublicidadForm extends React.Component {
      this.listadoClientes();
      this.presupuestador();
   }
-
-  
   
   listado(){
     fetch(`http://localhost:8888/publicidades`)
@@ -57,9 +53,9 @@ class PublicidadForm extends React.Component {
   }
   
   presupuestador(){
-    fetch(`http://localhost:8888/presupuestos`)
+    fetch(`http://localhost:8888/presupuestador`)
       .then(res => res.json())
-      .then(presupuestador => this. setState({presupuestador: presupuestador}))
+      .then(presupuestador => this. setState({presupuestador: presupuestador[0]}))
   }
   
   handleSubmit(event) {
@@ -76,26 +72,130 @@ class PublicidadForm extends React.Component {
     newPublicidad[event.target.name] = event.target.type === 'checkbox' ? event.target.checked : event.target.value;
     this.setState({publicidad: newPublicidad});
   }
-
-  handleChange2 = selectedDias=> {this.setState({selectedDias}, this.settingDias())};
-  handleChange3 = selectedTimes=> {this.setState({selectedTimes}, this.setHorarios())};
+  handleCliente = selectedCliente=> {this.setState({selectedCliente}, this.setCliente())};
+  handleDias = selectedDias=> {this.setState({selectedDias}, this.recalcularPresupuesto, this.settingDias() )};
+  handleHorarios = selectedTimes=> {this.setState({selectedTimes}, this.recalcularPresupuesto, this.setHorarios())};
       
   handlePresupuesto(event){
-    this.setState({cantidadPorDia : event.target.value}, this.recalcularPresupuesto, this.handleChange(event))
+    this.setState({[event.target.name] : event.target.value}, this.recalcularPresupuesto, this.handleChange(event))
   }
 
   recalcularPresupuesto(){
-    console.log("se llama la funcion presupuestar");
-    fetch(`http://localhost:8888/presupuestos/presupuestar`)
-      // .then(res => res.json())  
-      .then(res => {
-          console.log('res', res)
-          this.setState({presupuesto: res})
-        })
-      .then(this.setPrecio)
-      .catch(error => console.log(error))
+    let precioPorDia = this.calcularPrecioPorDia()
+    console.log("precioPorDia: ", precioPorDia)
+    let total = precioPorDia + this.calcularPrecioporVez()
+    console.log("total: ", total)
+    
+    total = total * (this.calcularPorcentajeSemanal() + this.calcularPorcentajePorHorario())
+    
+    this.setState({presupuesto: total})
+    console.log("total: ", total)
+    this.setPrecio();
+    // 1console.log("se llama la funcion presupuestar");
+    // fetch(`http://localhost:8888/presupuestador/presupuestar`)
+    // .then(res => res.json())  
+    // .then(res => {
+    //       console.log('response', res.calcularPrecioporVez())
+    //       this.setState({presupuesto: res.calcularPrecioporVez()})
+    //     })
+    //   .then(this.setPrecio)
+    //   .catch(error => console.log(error))
   }
 
+  calcularPrecioporVez=()=>{
+    return this.state.cantidadPorDia * this.state.presupuestador.vezPorDia;
+  }
+
+  calcularPrecioPorDia=()=>{
+    var fechaSalida = new Date(this.state.publicidad.fechaDeSalida);
+    console.log("fecha Salida: ", fechaSalida)
+    
+    var fechaEntrada = this.state.publicidad.fechaDeEntrada;
+    console.log("fecha Entrada: ", fechaEntrada)
+    
+    var dias = Math.round((fechaSalida - fechaEntrada)/ (1000 * 3600 * 24))
+    console.log("cantidad de Dias", dias)
+    
+    var precioDias = dias * this.state.presupuestador.precioPorDia
+    if(dias === "7"){
+      precioDias = this.state.presupuestador.precioPorSemana
+    } else if (dias === "30"){
+      precioDias = this.state.presupuestador.precioPorMes
+    }
+    console.log("precio de dias seleccionados: ", precioDias)
+    return precioDias;
+  }
+  setCliente=()=>{
+    this.setState({
+      publicidad:{
+      ...this.state.publicidad,
+      cliente:this.state.cliente.map(function(d){
+        return d.name
+      })
+      }
+      
+    },console.log("state",this.state))
+  }
+
+  calcularPorcentajeSemanal=()=>{
+    var porcentajeEstimado = 1;
+    var lunes = this.state.selectedDias.find(element => element.name === "Lunes");
+    var martes = this.state.selectedDias.find(element => element.name === "Martes");
+    var miercoles = this.state.selectedDias.find(element => element.name === "Miercoles");
+    var jueves = this.state.selectedDias.find(element => element.name === "Jueves");
+    var viernes = this.state.selectedDias.find(element => element.name === "Viernes");
+    var sabado = this.state.selectedDias.find(element => element.name === "Sabado");
+    var domingo = this.state.selectedDias.find(element => element.name === "Domingo");
+    if (lunes !== undefined){
+      porcentajeEstimado += this.state.presupuestador.porcentajeLunes;
+    }
+    if (martes !== undefined){
+      porcentajeEstimado += this.state.presupuestador.porcentajeMartes;
+    }
+    if (miercoles !== undefined){
+      porcentajeEstimado += this.state.presupuestador.porcentajeMiercoles;
+    }
+    if (jueves !== undefined){
+      porcentajeEstimado += this.state.presupuestador.porcentajeJueves;
+    }
+    if (viernes !== undefined){
+      porcentajeEstimado += this.state.presupuestador.porcentajeViernes;
+    }
+    if (sabado !== undefined){
+      porcentajeEstimado += this.state.presupuestador.porcentajeSabado;
+    }
+    if (domingo !== undefined){
+      porcentajeEstimado += this.state.presupuestador.porcentajeDomingo;
+    }
+    console.log("porcentaje estimado: ", porcentajeEstimado)
+    return Math.round(porcentajeEstimado)
+  }
+
+  calcularPorcentajePorHorario=()=>{
+    var porcentaje = 0;
+    var madrugada = this.state.selectedTimes.find(element => element.name === "Madrugada");
+    var mañana = this.state.selectedTimes.find(element => element.name === "Mañana");
+    var mediodia = this.state.selectedTimes.find(element => element.name === "Mediodia");
+    var tarde = this.state.selectedTimes.find(element => element.name === "Tarde");
+    var noche = this.state.selectedTimes.find(element => element.name === "Noche");
+    if (madrugada !== undefined){
+      porcentaje += this.state.presupuestador.porcentajeLunes;
+    }
+    if (mañana !== undefined){
+      porcentaje += this.state.presupuestador.porcentajeMartes;
+    }
+    if (mediodia !== undefined){
+      porcentaje += this.state.presupuestador.porcentajeMiercoles;
+    }
+    if (tarde !== undefined){
+      porcentaje += this.state.presupuestador.porcentajeJueves;
+    }
+    if (noche !== undefined){
+      porcentaje += this.state.presupuestador.porcentajeViernes;
+    }
+    console.log("porcentaje: ", porcentaje)
+    return porcentaje
+  }
   settingDias=()=>{
     this.setState({
       publicidad:{
@@ -138,15 +238,17 @@ class PublicidadForm extends React.Component {
         "Content-Type": "application/json"
       }
     });
+      console.log("state: ", this.state);
       return <Redirect to= "/publicidades"/>
   }
 
   estadoInicial() {
     this.setState(
-      { fechaDeEntrada: new Date(), 
+      { 
         publicidad: {  
                       cliente: "", 
                       precio: 0, 
+                      fechaDeEntrada: new Date(),
                       fechaDeSalida: new Date(), 
                       cantidadPorDia: 0, 
                       horariosDeSalida: [], 
@@ -192,23 +294,15 @@ class PublicidadForm extends React.Component {
             </datalist>
           </FormGroup>
           <FormGroup>
-            <Label for="precio">Monto</Label>
-            <Input type="text" name="precio" value={this.state.presupuesto} onChange={this.handleChange}/>
-          </FormGroup>
-          <FormGroup>
             <Label for="fechaDeSalida">Fecha de salida</Label>
-            <Input type="date" name="fechaDeSalida" value={moment(this.state.publicidad.fechaDeSalida).format('YYYY-MM-DD')} onChange={this.handleChange} />
-          </FormGroup>
-          <FormGroup>
-            <Label for="cantidadPorDia">Veces por dia</Label>
-            <Input type="text" name="cantidadPorDia" value={this.state.cantidadPorDia} onChange={this.handlePresupuesto} />
+            <Input type="date" name="fechaDeSalida" value={moment(this.state.publicidad.fechaDeSalida).format('YYYY-MM-DD')} onChange={this.handlePresupuesto} />
           </FormGroup>
           <FormGroup>
           <Label for="dias">Dias de la Semana</Label>
           <Multiselect
             options={this.state.dias} // Options to display in the dropdown
             selectedValues={selectedDias} // Preselected value to persist in dropdown
-            onSelect={this.handleChange2} // Function will trigger on select event
+            onSelect={this.handleDias} // Function will trigger on select event
             displayValue="name" // Property name to display in the dropdown options
             />
           </FormGroup>
@@ -217,10 +311,17 @@ class PublicidadForm extends React.Component {
           <Multiselect
             options={this.state.horarios} // Options to display in the dropdown
             selectedValues={selectedTimes} // Preselected value to persist in dropdown
-            onSelect={this.handleChange3} // Function will trigger on select event
+            onSelect={this.handleHorarios} // Function will trigger on select event
             displayValue="name" // Property name to display in the dropdown options
-            
             />
+          </FormGroup>
+          <FormGroup>
+            <Label for="cantidadPorDia">Veces por dia</Label>
+            <Input type="text" name="cantidadPorDia" value={this.state.cantidadPorDia} onChange={this.handlePresupuesto} />
+          </FormGroup>
+          <FormGroup>
+            <Label for="precio">Monto</Label>
+            <Input type="text" name="precio" value={this.state.presupuesto} onChange={this.handleChange}/>
           </FormGroup>
           <FormGroup >
             <Label for="pagado">Pagó</Label>
