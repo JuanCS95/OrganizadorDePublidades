@@ -1,8 +1,9 @@
 import React from 'react';
 import { Button, Form, FormGroup, Label, Input} from 'reactstrap';
 import { Multiselect } from 'multiselect-react-dropdown';
-import { Redirect } from 'react-router';
+import { Link } from 'react-router-dom';
 var moment = require('moment');
+
 
 class PublicidadForm extends React.Component {
 
@@ -11,9 +12,11 @@ class PublicidadForm extends React.Component {
       this.handleSubmit = this.handleSubmit.bind(this);
       this.handleChange = this.handleChange.bind(this);
       this.handleDias = this.handleDias.bind(this);
+      this.handleCliente = this.handleCliente.bind(this);
       this.handleHorarios = this.handleHorarios.bind(this);
       this.recalcularPresupuesto = this.recalcularPresupuesto.bind(this);
       this.handlePresupuesto = this.handlePresupuesto.bind(this);
+      
       this.state = {  
                       cliente:"",
                       clientes: [],
@@ -31,7 +34,6 @@ class PublicidadForm extends React.Component {
 
   componentWillReceiveProps(props) {
       this.setState({publicidad: props.publicidad})
-      this.setState({cliente: props.publicidad.cliente})
   }
 
   componentWillMount(){
@@ -69,17 +71,21 @@ class PublicidadForm extends React.Component {
 
   handleChange(event) {
     var newPublicidad = Object.assign({}, this.state.publicidad);
+    console.log("cliente State: ", this.state.publicidad.cliente);
     newPublicidad[event.target.name] = event.target.type === 'checkbox' ? event.target.checked : event.target.value;
     this.setState({publicidad: newPublicidad});
   }
-  handleCliente = selectedCliente=> {this.setState({selectedCliente}, this.setCliente())};
+  handleCliente(event){
+    var newPublicidad = Object.assign({}, this.state.publicidad);
+    newPublicidad[event.target.name] = event.target.name;
+    this.setState(newPublicidad)};
   handleDias = selectedDias=> {this.setState({selectedDias}, this.recalcularPresupuesto, this.settingDias() )};
   handleHorarios = selectedTimes=> {this.setState({selectedTimes}, this.recalcularPresupuesto, this.setHorarios())};
       
   handlePresupuesto(event){
     this.setState({[event.target.name] : event.target.value}, this.recalcularPresupuesto, this.handleChange(event))
   }
-
+  
   recalcularPresupuesto(){
     let precioPorDia = this.calcularPrecioPorDia()
     console.log("precioPorDia: ", precioPorDia)
@@ -103,6 +109,14 @@ class PublicidadForm extends React.Component {
   }
 
   calcularPrecioporVez=()=>{
+    // fetch(`http://localhost:8888/presupuestador/presupuestarVeces`)
+    //   .then(res => res.json())  
+    //   .then(res => {
+    //         console.log('response', res)
+    //         this.setState({presupuesto: res})
+    //       })
+    
+    
     return this.state.cantidadPorDia * this.state.presupuestador.vezPorDia;
   }
 
@@ -129,9 +143,7 @@ class PublicidadForm extends React.Component {
     this.setState({
       publicidad:{
       ...this.state.publicidad,
-      cliente:this.state.cliente.map(function(d){
-        return d.name
-      })
+      cliente:this.state.cliente
       }
       
     },console.log("state",this.state))
@@ -239,7 +251,6 @@ class PublicidadForm extends React.Component {
       }
     });
       console.log("state: ", this.state);
-      return <Redirect to= "/publicidades"/>
   }
 
   estadoInicial() {
@@ -272,23 +283,27 @@ class PublicidadForm extends React.Component {
   }
 
 
+
   render() {
     const {selectedDias} = this.state;
     const {selectedTimes} = this.state;
     
     let mostrarClientesList = this.state.clientes.map((cliente) => {
+      
+      console.log("clientes:", cliente.agenciaComercial)
       return(
-          <option data-value={cliente._id}>
+        <option data-value={cliente}>
           {cliente.agenciaComercial}
           </option>
       );
   });
+
     return (
       <div className="container" >
         <Form onSubmit={this.handleSubmit}>
           <FormGroup>
             <Label for="cliente">Cliente</Label>
-            <input list="clientes" type="text" value={this.state.cliente.agenciaComercial} onChange={this.handleChange} />
+            <input list="clientes" type="text" name="cliente" value={this.state.cliente.agenciaComercial} onChange={this.handleChange} />
             <datalist id="clientes">
               {mostrarClientesList}
             </datalist>
@@ -331,7 +346,7 @@ class PublicidadForm extends React.Component {
               checked={this.state.publicidad.pagado}
               onChange={this.handleChange}></input>
           </FormGroup>
-          <Button type="submit" value="submit">Agregar</Button>
+          <Button type="submit" onClick= {this.handleSubmit} value="submit"><Link to="/publicidades" >Agregar</Link></Button>
         </Form>
       </div>
     );

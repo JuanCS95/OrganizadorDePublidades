@@ -63,12 +63,10 @@ function init() {
     }
   })
   
-  
-
-  server.get("/presupuestador/presupuestar", (req, res) => {
+  server.get("/presupuestador/presupuestarVeces", (req, res) => {
     console.log("estoy presupuestando")
     home = homes["presupuestador"]
-    home.calcularPresupuesto((allObjects) => {
+    home.calcularPresupuesto((req, allObjects) => {
         console.log(allObjects)
         res.json(allObjects)
         res.end() })

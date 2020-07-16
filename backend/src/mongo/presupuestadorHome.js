@@ -1,5 +1,4 @@
 var mongoDriver= require('mongodb');
-const Presupuestador = require('../modelo/presupuestador');
 
 
 class PresupuestadorHome {
@@ -48,11 +47,16 @@ class PresupuestadorHome {
         })
     }
 
-    calcularPresupuesto(callback){
+    calcularPresupuesto(req, callback){
         this.presupuestador.find({}).toArray( (error, result) => {
             if(error) throw error
-            callback(result[0])
+            var presupuesto = this.calcularPrecioPorVez(req, result[0])
+            callback(presupuesto)
         })
+    }
+
+    calcularPrecioPorVez(veces, presupuestador){
+        return veces * presupuestador.vezPorDia
     }
 
 }
