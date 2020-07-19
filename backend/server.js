@@ -5,39 +5,8 @@ mongoHome = require('./src/mongo/mongoHome');
 Presupuestador = require("./src/modelo/presupuestador")
 var cors = require('cors');
 
-var connect = require('camo').connect;
-
-var db
-
-var database;
-var uri = 'mongodb://localhost:27017/radio';
-connect(uri).then(function(db) {
-    database = db;
-});
-
-
 
 var homes = {}
-
-// presupuestadorRadio = Presupuestador.create({
-//       precioPorSemana:500,
-//       precioPorMes: 1000, 
-//       precioPorDia: 100, 
-//       vezPorDia: 50, 
-//       porcentajeLunes: 2,
-//       porcentajeMartes: 1,
-//       porcentajeMiercoles: 1,
-//       porcentajeJueves: 1,
-//       porcentajeViernes: 1,
-//       porcentajeSabado: 2,
-//       porcentajeDomingo: 3,
-//       porcentajeMadrugada: 0.5, 
-//       porcentajeMedioDia: 0.2, 
-//       porcentajeTarde: 0.1, 
-//       porcentajeNoche: 0.1})
-//   presupuestadorRadio.save().then(function(l) {
-//       console.log(l._id);
-//   });
 
 function register(home) {
   console.log(`registering handlers for ${home.type}`)
@@ -63,15 +32,35 @@ function init() {
     }
   })
   
-  server.get("/presupuestador/presupuestarVeces", (req, res) => {
+  server.get("/presupuestador/presupuestarVeces/:cantidadPorDia", (req, res) => {
     console.log("estoy presupuestando")
     home = homes["presupuestador"]
-    home.calcularPresupuesto((req, allObjects) => {
-        console.log(allObjects)
+    vecesPorDia = req.params.cantidadPorDia
+    console.log("req: ", vecesPorDia)
+    home.calcularPresupuestoPorVez(vecesPorDia,(allObjects) => {
+        console.log("allObjects: ", allObjects)
         res.json(allObjects)
         res.end() })
-    console.log("res" + res)
-      })
+    console.log("res backend: " + res)
+  })
+
+  server.get("/presupuestador/presupuestarDuracion/:fechaDeSalida", (req, res) => {
+    home = homes["presupuestador"]
+    fechaSalida = req.params.fechaDeSalida
+    console.log("req: ", fechaSalida)
+    home.calcularPresupuestoPorDuracion(fechaSalida,(allObjects) => {
+        res.json(allObjects)
+        res.end() })
+  })
+
+  server.get("/presupuestador/presupuestarPorcentajeSemanal/:diasDeLaSemana", (req, res) => {
+    home = homes["presupuestador"]
+    DiasSeleccionados = req.params.diasDeLaSemana
+    console.log("req: ", diasSeleccionados)
+    home.calcularPresupuestoSemanal(diasSeleccionados,(allObjects) => {
+        res.json(allObjects)
+        res.end() })
+  })
 
   server.post("/publicidades/:id", (req, res) => {
     publicidadHome = new mongoHome(db)

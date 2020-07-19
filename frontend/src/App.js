@@ -6,6 +6,7 @@ import PublicidadesList from './components/PublicidadesList'
 import PublicidadForm from './components/PublicidadForm'
 import PresupuestadorForm from "./components/PresupuestadorForm"
 import {BrowserRouter as Router, Route, Switch, Redirect, NavLink} from "react-router-dom"
+import PresupuestadorExterno from './components/PresupuestadorExterno';
 import './App.css';
 
 function ClientesComponent() {
@@ -22,6 +23,10 @@ function PublicidadFormComponent()  {
 function presupuestadorComponent(){
   return (<PresupuestadorForm entity="presupuestador"/>)
 }
+function presupuestadorExternoComponent(){
+  return (<PresupuestadorExterno entity="presupuestadorExterno"/>)
+}
+
 
 function App() {
   return (
@@ -35,7 +40,7 @@ function App() {
           <li><NavLink to="/publicidades">Publicidades</NavLink></li>
           <li><NavLink to="/nuevaPublicidad">Agregar Publicidad</NavLink></li>
           <li><NavLink to="/presupuestadorForm"> Configurar Presupuestador</NavLink></li>
-          <li><NavLink to="">Calcular Presupuesto</NavLink></li>
+          <li><NavLink to="/presupuestadorExterno">Calcular Presupuesto</NavLink></li>
         </ul>
       </header>
       <main className="App-main">
@@ -45,6 +50,7 @@ function App() {
             <Route path="/publicidades" component={PublicidadesComponent} />
             <Route path="/nuevaPublicidad" component={PublicidadFormComponent} />
             <Route path="/presupuestadorForm" component={presupuestadorComponent}/>
+            <Route path="/presupuestadorExterno" component={presupuestadorExternoComponent}/>
             <Redirect to="/" />
           </Switch>
       </main>

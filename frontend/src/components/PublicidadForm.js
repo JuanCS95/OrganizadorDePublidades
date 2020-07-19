@@ -12,7 +12,6 @@ class PublicidadForm extends React.Component {
       this.handleSubmit = this.handleSubmit.bind(this);
       this.handleChange = this.handleChange.bind(this);
       this.handleDias = this.handleDias.bind(this);
-      this.handleCliente = this.handleCliente.bind(this);
       this.handleHorarios = this.handleHorarios.bind(this);
       this.recalcularPresupuesto = this.recalcularPresupuesto.bind(this);
       this.handlePresupuesto = this.handlePresupuesto.bind(this);
@@ -20,7 +19,10 @@ class PublicidadForm extends React.Component {
       this.state = {  
                       cliente:"",
                       clientes: [],
-                      cantidadPorDia: '',
+                      cantidadPorDia: 0,
+                      precioCantidadPorDia: 0,
+                      precioPorCantidadDeDias: 0,
+                      porcentajeSemanal: 1,
                       selectedDias: [],
                       dias:[{name:'Lunes', id:1},{name:'Martes', id:2},{name:'Miercoles', id:3},{name:'Jueves', id:4},{name:'Viernes', id:5},{name:'Sabado', id:6}, {name: 'Domingo', id:7}],
                       selectedTimes: [],
@@ -71,14 +73,10 @@ class PublicidadForm extends React.Component {
 
   handleChange(event) {
     var newPublicidad = Object.assign({}, this.state.publicidad);
-    console.log("cliente State: ", this.state.publicidad.cliente);
     newPublicidad[event.target.name] = event.target.type === 'checkbox' ? event.target.checked : event.target.value;
     this.setState({publicidad: newPublicidad});
   }
-  handleCliente(event){
-    var newPublicidad = Object.assign({}, this.state.publicidad);
-    newPublicidad[event.target.name] = event.target.name;
-    this.setState(newPublicidad)};
+  
   handleDias = selectedDias=> {this.setState({selectedDias}, this.recalcularPresupuesto, this.settingDias() )};
   handleHorarios = selectedTimes=> {this.setState({selectedTimes}, this.recalcularPresupuesto, this.setHorarios())};
       
@@ -86,68 +84,51 @@ class PublicidadForm extends React.Component {
     this.setState({[event.target.name] : event.target.value}, this.recalcularPresupuesto, this.handleChange(event))
   }
   
-  recalcularPresupuesto(){
-    let precioPorDia = this.calcularPrecioPorDia()
-    console.log("precioPorDia: ", precioPorDia)
-    let total = precioPorDia + this.calcularPrecioporVez()
-    console.log("total: ", total)
-    
+  recalcularPresupuesto=()=>{
+    this.calcularPrecioporVez();
+    this.calcularPrecioPorDia();
+    console.log("precioPorCantidaddias:", this.state.precioPorCantidadDeDias);
+    console.log("precioporveces:", this.state.precioCantidadPorDia);
+    let total = this.state.precioPorCantidadDeDias + this.state.precioCantidadPorDia;
+    console.log("total base: ", total);
     total = total * (this.calcularPorcentajeSemanal() + this.calcularPorcentajePorHorario())
-    
+    console.log("total: ", total);
     this.setState({presupuesto: total})
-    console.log("total: ", total)
     this.setPrecio();
-    // 1console.log("se llama la funcion presupuestar");
-    // fetch(`http://localhost:8888/presupuestador/presupuestar`)
-    // .then(res => res.json())  
-    // .then(res => {
-    //       console.log('response', res.calcularPrecioporVez())
-    //       this.setState({presupuesto: res.calcularPrecioporVez()})
-    //     })
-    //   .then(this.setPrecio)
-    //   .catch(error => console.log(error))
   }
 
   calcularPrecioporVez=()=>{
-    // fetch(`http://localhost:8888/presupuestador/presupuestarVeces`)
-    //   .then(res => res.json())  
-    //   .then(res => {
-    //         console.log('response', res)
-    //         this.setState({presupuesto: res})
-    //       })
-    
-    
-    return this.state.cantidadPorDia * this.state.presupuestador.vezPorDia;
+    fetch(`http://localhost:8888/presupuestador/presupuestarVeces/`+this.state.cantidadPorDia)
+      .then(res => res.json())
+      .then(res => {
+            console.log("response frontend: ", res);
+            this.setState({precioCantidadPorDia: res})
+          })
   }
 
   calcularPrecioPorDia=()=>{
-    var fechaSalida = new Date(this.state.publicidad.fechaDeSalida);
-    console.log("fecha Salida: ", fechaSalida)
-    
-    var fechaEntrada = this.state.publicidad.fechaDeEntrada;
-    console.log("fecha Entrada: ", fechaEntrada)
-    
-    var dias = Math.round((fechaSalida - fechaEntrada)/ (1000 * 3600 * 24))
-    console.log("cantidad de Dias", dias)
-    
-    var precioDias = dias * this.state.presupuestador.precioPorDia
-    if(dias === "7"){
-      precioDias = this.state.presupuestador.precioPorSemana
-    } else if (dias === "30"){
-      precioDias = this.state.presupuestador.precioPorMes
-    }
-    console.log("precio de dias seleccionados: ", precioDias)
-    return precioDias;
+    fetch(`http://localhost:8888/presupuestador/presupuestarDuracion/`+this.state.publicidad.fechaDeSalida)
+      .then(res => res.json())
+      .then(res => {
+            console.log("response frontend: ", res);
+            this.setState({precioPorCantidadDeDias: res})
+          })
   }
   setCliente=()=>{
     this.setState({
       publicidad:{
       ...this.state.publicidad,
-      cliente:this.state.cliente
+      cliente:this.buscandoCliente()
       }
       
     },console.log("state",this.state))
   }
+
+buscandoCliente(){
+  const resultado = this.state.clientes.find( cliente => cliente.agenciaComercial === this.state.cliente);
+  console.log("resultado: ", resultado);
+  return resultado;
+}
 
   calcularPorcentajeSemanal=()=>{
     var porcentajeEstimado = 1;
@@ -158,31 +139,15 @@ class PublicidadForm extends React.Component {
     var viernes = this.state.selectedDias.find(element => element.name === "Viernes");
     var sabado = this.state.selectedDias.find(element => element.name === "Sabado");
     var domingo = this.state.selectedDias.find(element => element.name === "Domingo");
-    if (lunes !== undefined){
-      porcentajeEstimado += this.state.presupuestador.porcentajeLunes;
-    }
-    if (martes !== undefined){
-      porcentajeEstimado += this.state.presupuestador.porcentajeMartes;
-    }
-    if (miercoles !== undefined){
-      porcentajeEstimado += this.state.presupuestador.porcentajeMiercoles;
-    }
-    if (jueves !== undefined){
-      porcentajeEstimado += this.state.presupuestador.porcentajeJueves;
-    }
-    if (viernes !== undefined){
-      porcentajeEstimado += this.state.presupuestador.porcentajeViernes;
-    }
-    if (sabado !== undefined){
-      porcentajeEstimado += this.state.presupuestador.porcentajeSabado;
-    }
-    if (domingo !== undefined){
-      porcentajeEstimado += this.state.presupuestador.porcentajeDomingo;
-    }
-    console.log("porcentaje estimado: ", porcentajeEstimado)
+    if (lunes !== undefined){porcentajeEstimado += this.state.presupuestador.porcentajeLunes;}
+    if (martes !== undefined){porcentajeEstimado += this.state.presupuestador.porcentajeMartes;}
+    if (miercoles !== undefined){porcentajeEstimado += this.state.presupuestador.porcentajeMiercoles;}
+    if (jueves !== undefined){porcentajeEstimado += this.state.presupuestador.porcentajeJueves;}
+    if (viernes !== undefined){porcentajeEstimado += this.state.presupuestador.porcentajeViernes;}
+    if (sabado !== undefined){porcentajeEstimado += this.state.presupuestador.porcentajeSabado;}
+    if (domingo !== undefined){porcentajeEstimado += this.state.presupuestador.porcentajeDomingo;}
     return Math.round(porcentajeEstimado)
   }
-
   calcularPorcentajePorHorario=()=>{
     var porcentaje = 0;
     var madrugada = this.state.selectedTimes.find(element => element.name === "Madrugada");
@@ -190,22 +155,11 @@ class PublicidadForm extends React.Component {
     var mediodia = this.state.selectedTimes.find(element => element.name === "Mediodia");
     var tarde = this.state.selectedTimes.find(element => element.name === "Tarde");
     var noche = this.state.selectedTimes.find(element => element.name === "Noche");
-    if (madrugada !== undefined){
-      porcentaje += this.state.presupuestador.porcentajeLunes;
-    }
-    if (mañana !== undefined){
-      porcentaje += this.state.presupuestador.porcentajeMartes;
-    }
-    if (mediodia !== undefined){
-      porcentaje += this.state.presupuestador.porcentajeMiercoles;
-    }
-    if (tarde !== undefined){
-      porcentaje += this.state.presupuestador.porcentajeJueves;
-    }
-    if (noche !== undefined){
-      porcentaje += this.state.presupuestador.porcentajeViernes;
-    }
-    console.log("porcentaje: ", porcentaje)
+    if (madrugada !== undefined){porcentaje += this.state.presupuestador.porcentajeLunes;}
+    if (mañana !== undefined){porcentaje += this.state.presupuestador.porcentajeMartes;}
+    if (mediodia !== undefined){porcentaje += this.state.presupuestador.porcentajeMiercoles;}
+    if (tarde !== undefined){porcentaje += this.state.presupuestador.porcentajeJueves;}
+    if (noche !== undefined){porcentaje += this.state.presupuestador.porcentajeViernes;}
     return porcentaje
   }
   settingDias=()=>{
@@ -282,7 +236,9 @@ class PublicidadForm extends React.Component {
 
   }
 
-
+  event = (event)=>{
+    event.preventDefault()
+  }
 
   render() {
     const {selectedDias} = this.state;
@@ -290,7 +246,7 @@ class PublicidadForm extends React.Component {
     
     let mostrarClientesList = this.state.clientes.map((cliente) => {
       
-      console.log("clientes:", cliente.agenciaComercial)
+      //console.log("clientes:", cliente.agenciaComercial)
       return(
         <option data-value={cliente}>
           {cliente.agenciaComercial}
@@ -300,7 +256,7 @@ class PublicidadForm extends React.Component {
 
     return (
       <div className="container" >
-        <Form onSubmit={this.handleSubmit}>
+        <Form onSubmit={this.event}>
           <FormGroup>
             <Label for="cliente">Cliente</Label>
             <input list="clientes" type="text" name="cliente" value={this.state.cliente.agenciaComercial} onChange={this.handleChange} />

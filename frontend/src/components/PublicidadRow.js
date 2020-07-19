@@ -1,7 +1,11 @@
 import React from 'react';
 import { Button } from 'reactstrap';
+import { Link } from 'react-router-dom';
 import PublicidadForm from './PublicidadForm';
 
+function PublicidadFormComponent()  {
+  return (<PublicidadForm entity="publicidad"/>)
+}
 
 var moment = require('moment');
 
@@ -34,7 +38,7 @@ class PublicidadRow extends React.Component {
     render() {      
         return(
             <tr onClick={this.selectPublicidad}>
-              <td>{this.props.publicidad.cliente.agenciaComercial}</td>
+              <td>{this.props.publicidad.cliente}</td>
               <td>{moment(this.props.publicidad.fechaDeEntrada).format('DD-M-YYYY')}</td>
               <td>{moment(this.props.publicidad.fechaDeSalida).format('DD-M-YYYY')}</td>
               <td>{this.props.publicidad.cantidadPorDia}</td>
@@ -43,14 +47,15 @@ class PublicidadRow extends React.Component {
               <td>{this.props.publicidad.precio}</td>
               <td>{this.props.publicidad.pagado ? "Pagado" : "Adeuda" }  </td>
               <td><Button color="primary" onClick={() => {
-                    
-                  }}>Editar/Cobrar</Button>
+               
+              }}><Link to="nuevaPublicidad">Editar</Link></Button>
                   <Button color="danger" onClick={() => {
                     this.handleSubmit(this.props.publicidad._id);
                   }}>Borrar</Button></td>
           </tr>)
       
     }
+    
 }
 
   export default PublicidadRow

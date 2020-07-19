@@ -1,4 +1,5 @@
 var mongoDriver= require('mongodb');
+const Presupuestador = require('../modelo/presupuestador');
 
 
 class PresupuestadorHome {
@@ -47,17 +48,31 @@ class PresupuestadorHome {
         })
     }
 
-    calcularPresupuesto(req, callback){
+    calcularPresupuestoPorVez(req, callback){
         this.presupuestador.find({}).toArray( (error, result) => {
             if(error) throw error
-            var presupuesto = this.calcularPrecioPorVez(req, result[0])
-            callback(presupuesto)
+            var newPresupuestador = new Presupuestador(result[0].precioPorSemana, result[0].precioPorMes, result[0].precioPorDia, result[0].vezPorDia, result[0].porcentajeLunes, result[0].porcentajeMartes, result[0].porcentajeMiercoles, result[0].porcentajeJueves, result[0].porcentajeViernes, result[0].porcentajeSabado, result[0].porcentajeDomingo, result[0].porcentajeMadrugada, result[0].porcentajeMedioDia, result[0].porcentajeTarde, result[0].porcentajeNoche)
+            var precioPorVez = newPresupuestador.calcularPrecioporVez(req)
+            callback (precioPorVez);
         })
     }
 
-    calcularPrecioPorVez(veces, presupuestador){
-        return veces * presupuestador.vezPorDia
+    calcularPresupuestoPorDuracion(req, callback){
+        this.presupuestador.find({}).toArray( (error, result) => {
+            if(error) throw error
+            var newPresupuestador = new Presupuestador(result[0].precioPorSemana, result[0].precioPorMes, result[0].precioPorDia, result[0].vezPorDia, result[0].porcentajeLunes, result[0].porcentajeMartes, result[0].porcentajeMiercoles, result[0].porcentajeJueves, result[0].porcentajeViernes, result[0].porcentajeSabado, result[0].porcentajeDomingo, result[0].porcentajeMadrugada, result[0].porcentajeMedioDia, result[0].porcentajeTarde, result[0].porcentajeNoche)
+            var precioPorDuracion = newPresupuestador.calcularPrecioPorDuracion(req)
+            callback(precioPorDuracion)
+            })
     }
 
+    calcularPresupuestoSemanal(req, callback){
+        this.presupuestador.find({}).toArray( (error, result) => {
+            if(error) throw error
+            var newPresupuestador = new Presupuestador(result[0].precioPorSemana, result[0].precioPorMes, result[0].precioPorDia, result[0].vezPorDia, result[0].porcentajeLunes, result[0].porcentajeMartes, result[0].porcentajeMiercoles, result[0].porcentajeJueves, result[0].porcentajeViernes, result[0].porcentajeSabado, result[0].porcentajeDomingo, result[0].porcentajeMadrugada, result[0].porcentajeMedioDia, result[0].porcentajeTarde, result[0].porcentajeNoche)
+            var porcentajeSemanal = newPresupuestador.calcularPorcentajeSemanal(req)
+            callback(porcentajeSemanal)
+            })
+    }
 }
 module.exports = PresupuestadorHome;
