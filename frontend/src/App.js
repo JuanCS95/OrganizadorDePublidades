@@ -34,7 +34,7 @@ function App() {
     <Router>
       <header className="App-header">
       <img src={logo} className="App-logo" alt="logo" />
-        <ul>
+        <ul className="main-menu">
           <li><NavLink to="/">Home</NavLink></li>
           <li><NavLink to="/clientes">Clientes</NavLink></li>
           <li><NavLink to="/publicidades">Publicidades</NavLink></li>

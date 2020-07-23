@@ -53,15 +53,6 @@ function init() {
         res.end() })
   })
 
-  server.get("/presupuestador/presupuestarPorcentajeSemanal/:diasDeLaSemana", (req, res) => {
-    home = homes["presupuestador"]
-    DiasSeleccionados = req.params.diasDeLaSemana
-    console.log("req: ", diasSeleccionados)
-    home.calcularPresupuestoSemanal(diasSeleccionados,(allObjects) => {
-        res.json(allObjects)
-        res.end() })
-  })
-
   server.post("/publicidades/:id", (req, res) => {
     publicidadHome = new mongoHome(db)
     publicidadId = req.params.id
@@ -88,6 +79,13 @@ function init() {
     home.get(req.params.id, (myObject) => { 
       res.json(myObject) 
       res.end() })  
+  })
+
+  server.put("/presupuestador", (req, res) => {
+    home = homes["presupuestador"]
+    console.log("req: ",req.body)
+    home.update(req.body)
+    res.status(204).end();  
   })
 
   server.put("/:type", (req, res) => {

@@ -2,6 +2,7 @@ import React from 'react';
 import { Button, Form, FormGroup, Label, Input} from 'reactstrap';
 import { Multiselect } from 'multiselect-react-dropdown';
 import { Link } from 'react-router-dom';
+import blackfreebackground from '../black-free-background.png'
 var moment = require('moment');
 
 
@@ -29,7 +30,7 @@ class PublicidadForm extends React.Component {
                       horarios: [{name:'Madrugada', id:1}, {name:'Mañana', id:2}, {name: 'Mediodia', id:3}, {name: 'Tarde', id:4}, {name: 'Noche', id:5}],
                       presupuesto: '',
                       presupuestador: '',
-                      publicidad:this.props.publicidad
+                      publicidad: props.publicidad
                     }
       this.estadoInicial = this.estadoInicial.bind(this);
     }
@@ -124,12 +125,6 @@ class PublicidadForm extends React.Component {
     },console.log("state",this.state))
   }
 
-buscandoCliente(){
-  const resultado = this.state.clientes.find( cliente => cliente.agenciaComercial === this.state.cliente);
-  console.log("resultado: ", resultado);
-  return resultado;
-}
-
   calcularPorcentajeSemanal=()=>{
     var porcentajeEstimado = 1;
     var lunes = this.state.selectedDias.find(element => element.name === "Lunes");
@@ -203,7 +198,7 @@ buscandoCliente(){
         Accept: "application/json",
         "Content-Type": "application/json"
       }
-    });
+    }).then(this.listado())
       console.log("state: ", this.state);
   }
 
@@ -246,7 +241,6 @@ buscandoCliente(){
     
     let mostrarClientesList = this.state.clientes.map((cliente) => {
       
-      //console.log("clientes:", cliente.agenciaComercial)
       return(
         <option data-value={cliente}>
           {cliente.agenciaComercial}
@@ -257,52 +251,54 @@ buscandoCliente(){
     return (
       <div className="container" >
         <Form onSubmit={this.event}>
-          <FormGroup>
+          <div >
             <Label for="cliente">Cliente</Label>
-            <input list="clientes" type="text" name="cliente" value={this.state.cliente.agenciaComercial} onChange={this.handleChange} />
+            <input list="clientes" type="text" name="cliente" className="input-icon" value={this.state.cliente.agenciaComercial} onChange={this.handleChange} />
             <datalist id="clientes">
               {mostrarClientesList}
             </datalist>
-          </FormGroup>
-          <FormGroup>
-            <Label for="fechaDeSalida">Fecha de salida</Label>
-            <Input type="date" name="fechaDeSalida" value={moment(this.state.publicidad.fechaDeSalida).format('YYYY-MM-DD')} onChange={this.handlePresupuesto} />
-          </FormGroup>
-          <FormGroup>
-          <Label for="dias">Dias de la Semana</Label>
-          <Multiselect
-            options={this.state.dias} // Options to display in the dropdown
-            selectedValues={selectedDias} // Preselected value to persist in dropdown
-            onSelect={this.handleDias} // Function will trigger on select event
-            displayValue="name" // Property name to display in the dropdown options
-            />
-          </FormGroup>
-          <FormGroup>
-          <Label for="horarios">Horarios de salida</Label>
-          <Multiselect
-            options={this.state.horarios} // Options to display in the dropdown
-            selectedValues={selectedTimes} // Preselected value to persist in dropdown
-            onSelect={this.handleHorarios} // Function will trigger on select event
-            displayValue="name" // Property name to display in the dropdown options
-            />
-          </FormGroup>
-          <FormGroup>
-            <Label for="cantidadPorDia">Veces por dia</Label>
-            <Input type="text" name="cantidadPorDia" value={this.state.cantidadPorDia} onChange={this.handlePresupuesto} />
-          </FormGroup>
-          <FormGroup>
-            <Label for="precio">Monto</Label>
-            <Input type="text" name="precio" value={this.state.presupuesto} onChange={this.handleChange}/>
+          </div>
+          <FormGroup >
+            <Label for="fechaDeSalida" >Fecha de salida</Label>
+            <Input type="date" name="fechaDeSalida" className="date-picker form-control"  value={moment(this.state.publicidad.fechaDeSalida).format('YYYY-MM-DD')} onChange={this.handlePresupuesto} />
           </FormGroup>
           <FormGroup >
+          <Label for="dias">Dias de la Semana</Label>
+          <Multiselect class="dropdown-menu"
+            options={this.state.dias} 
+            selectedValues={selectedDias} 
+            onSelect={this.handleDias} 
+            displayValue="name" 
+            placeholder="Seleccionar dias"
+            />
+          </FormGroup>
+          <FormGroup >
+            <Label for="horarios">Horarios de salida</Label>
+            <Multiselect class="dropdown-menu"
+              options={this.state.horarios} 
+              selectedValues={selectedTimes} 
+              onSelect={this.handleHorarios} 
+              displayValue="name" 
+              placeholder="Seleccionar horarios"
+              />
+          </FormGroup>
+          <FormGroup >
+            <Label for="cantidadPorDia" class="col-sm-2 col-form-label">Veces por dia</Label>
+            <Input type="text" name="cantidadPorDia" className="int-input" value={this.state.cantidadPorDia} onChange={this.handlePresupuesto} />
+          </FormGroup>
+          <FormGroup >
+            <Label for="precio" class="col-sm-2 col-form-label">Monto</Label>
+            <Input type="text" name="precio" className="int-input" value={this.state.presupuesto} onChange={this.handleChange}/>
+          </FormGroup>
+          <div >
             <Label for="pagado">Pagó</Label>
             <input
               name="pagado"
               type="checkbox"
               checked={this.state.publicidad.pagado}
               onChange={this.handleChange}></input>
-          </FormGroup>
-          <Button type="submit" onClick= {this.handleSubmit} value="submit"><Link to="/publicidades" >Agregar</Link></Button>
+          </div>
+          <Button type="submit" onClick= {this.handleSubmit}  value="submit"><Link to="/publicidades" className="link-button" >Agregar</Link></Button>
         </Form>
       </div>
     );

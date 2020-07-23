@@ -14,8 +14,11 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: calc(5px + 2vmin);
+  font-size: calc(10px + 2vmin);
   color: white;
+  background-position: center;
+  /* background-image: url("black-free-background.png"); */
+  background-image: url("a151e29409954830f542a9b8bb604582_w200.gif");
 }
 
 
@@ -26,7 +29,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
+  font-size: calc(10px + 1vmin);
   color: black;
 }
 
@@ -47,8 +50,43 @@ header ul {
 header ul li {
   float: left;
   margin-right: 20px;
+  text-shadow: 2px 2px 2px black;
 }
 
 a {
   color: white
+}
+
+.container{
+  min-height: 40vh;
+  max-width: 406px;
+}
+
+.main-menu{
+  background-color: gray;
+  border-radius: 5px;
+  box-shadow: 3px 3px 3px lightgray;
+}
+
+.link-button{
+  color:black;
+}
+
+.date-picker{
+  width: auto;
+  display: inline-block;
+}
+
+.int-input{
+  width: 15%;
+  display: inline-block;
+}
+
+.int-input-large{
+  width: 12vh;
+  display: inline-block;
+}
+
+.table-text{
+  text-align: left;
 }

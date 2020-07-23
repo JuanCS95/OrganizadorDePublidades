@@ -9,12 +9,16 @@ class ClienteForm extends React.Component {
   
       this.handleSubmit = this.handleSubmit.bind(this);
       this.handleChange = this.handleChange.bind(this);
-      this.state = {cliente:props.cliente}
+      this.state = {cliente: this.props.cliente}
       this.estadoInicial = this.estadoInicial.bind(this);
     }
 
   componentWillReceiveProps(props) {
       this.setState({cliente: props.cliente})
+  }
+
+  componentWillMount =() =>{
+    this.props.listado();
   }
 
 
@@ -43,11 +47,20 @@ class ClienteForm extends React.Component {
       }
     }).then(res => this.props.listado())
       .then(this.estadoInicial);
+      
 
   }
 
   estadoInicial() {
-    this.setState({ cliente: { agenteComercial: "", agenciaComercial: "", direccion: "", telefono: "" } });
+    this.setState({ 
+                    cliente: { 
+                      agenteComercial: "", 
+                      agenciaComercial: "", 
+                      direccion: "", 
+                      telefono: "", 
+                      deuda:0 
+                    } 
+                  });
   }
 
   editarCliente() {
@@ -58,8 +71,9 @@ class ClienteForm extends React.Component {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify(this.state.cliente)
-    }).then(res => this.props.clienteChange(this.state.cliente))
-      .then(this.estadoInicial);
+    }).then(res => this.props.listado)
+      .then(this.estadoInicial)
+      .then(this.componentWillMount);
 
   }
 
@@ -87,7 +101,7 @@ class ClienteForm extends React.Component {
             <Label for="deuda">Deuda</Label>
             <Input type="number" name="deuda" value={this.state.cliente.deuda} onChange={this.handleChange} />
           </FormGroup>
-          <Button type="submit" value="submit">Cargar</Button>
+          <Button type="submit" value="submit">Agregar</Button>
         </Form>
       </div>
     );

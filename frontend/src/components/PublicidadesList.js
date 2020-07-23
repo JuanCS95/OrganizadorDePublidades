@@ -1,7 +1,7 @@
 import React from 'react';
 import PublicidadRow from './PublicidadRow'
 import { Table} from 'reactstrap'
-
+import PublicidadForm from './PublicidadForm'
 
   class PublicidadesList extends React.Component {
 
@@ -21,28 +21,22 @@ import { Table} from 'reactstrap'
     render() {
       if(this.state.publicidades.length > 0) {
       return (
-        <div className="objetosPerdidosCSS">
-          {/* <PublicidadForm
-            publicidad={this.state.selected}
-            publicidadChange={this.publicidadChange}
-            listado ={this.listado}
-            listadoClientes={this.listadoClientes}
-          /> */}
-          
-          <Table className="table" striped>
+        <div >
+          <Table className="table table-bordered table-hover" striped>
             <thead>
               <tr>
-                <th>Agencia</th>
-                <th>Fecha de entrada</th>
-                <th>Fecha de salida</th>
-                <th>Salidas p/ dia</th>
-                <th>Dias de Salida</th>
-                <th>Horarios de Salida</th>
-                <th>Precio</th>
-                <th>Estado</th>
+                <th scope="col">Agencia</th>
+                <th scope="col">Entrada</th>
+                <th scope="col">Salida</th>
+                <th scope="col">Salidas p/ dia</th>
+                <th scope="col">Dias de Salida</th>
+                <th scope="col">Horarios</th>
+                <th scope="col">Precio</th>
+                <th scope="col">Estado</th>
+                <th scope="col"></th>
               </tr>
             </thead>
-            <tbody>
+            <tbody >
               {this.renderRows()}
             </tbody>
           </Table>

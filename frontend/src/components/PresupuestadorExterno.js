@@ -148,7 +148,7 @@ class PresupuestadorExterno extends React.Component {
         <Form onSubmit={this.handleSubmit}>
           <FormGroup>
             <Label for="fechaDeSalida">Fecha de salida</Label>
-            <Input type="date" name="fechaDeSalida" value={moment(this.state.fechaDeSalida).format('YYYY-MM-DD')} onChange={this.handlePresupuesto} />
+            <Input type="date" name="fechaDeSalida" className="date-picker" value={moment(this.state.fechaDeSalida).format('YYYY-MM-DD')} onChange={this.handlePresupuesto} />
           </FormGroup>
           <FormGroup>
           <Label for="dias">Dias de la Semana</Label>
@@ -157,6 +157,7 @@ class PresupuestadorExterno extends React.Component {
             selectedValues={selectedDias} // Preselected value to persist in dropdown
             onSelect={this.handleDias} // Function will trigger on select event
             displayValue="name" // Property name to display in the dropdown options
+            placeholder="Seleccionar dias"
             />
           </FormGroup>
           <FormGroup>
@@ -166,15 +167,16 @@ class PresupuestadorExterno extends React.Component {
             selectedValues={selectedTimes} // Preselected value to persist in dropdown
             onSelect={this.handleHorarios} // Function will trigger on select event
             displayValue="name" // Property name to display in the dropdown options
+            placeholder="Seleccionar horarios"
             />
           </FormGroup>
           <FormGroup>
             <Label for="cantidadPorDia">Veces por dia</Label>
-            <Input type="text" name="cantidadPorDia" value={this.state.cantidadPorDia} onChange={this.handlePresupuesto} />
+            <Input type="text" name="cantidadPorDia" className="int-input" value={this.state.cantidadPorDia} onChange={this.handlePresupuesto} />
           </FormGroup>
           <FormGroup>
             <Label for="precio">Monto</Label>
-            <Input type="text" name="precio" value={this.state.presupuesto} onChange={this.handleChange}/>
+            <Input type="text" name="precio" className="int-input" value={this.state.presupuesto} onChange={this.handleChange}/>
           </FormGroup>
         </Form>
       </div>

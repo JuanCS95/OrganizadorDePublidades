@@ -5,9 +5,9 @@ import ClienteForm from './ClienteForm';
 class Clientes extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { clientes: [], selected:{}}
+    this.state = { clientes: [], selected:{}};
     this.select = this.select.bind(this);
-    this.listado = this.listado.bind(this)
+    this.listado = this.listado.bind(this);
     this.clienteChange = this.clienteChange.bind(this);
     this.actualizarListaDeObjetos=this.actualizarListaDeObjetos.bind(this);
   }
@@ -16,26 +16,24 @@ class Clientes extends React.Component {
     this.listado();
   }
 
-  listado(){
+  listado=()=>{
     fetch(`http://localhost:8888/clientes`)
       .then( res => res.json())
       .then( prds => this.setState({clientes: prds}));
   }
 
     render() {
-
-      if( this.state.clientes.length > 0 ) {
         return(
-          <div className="ClientesCSS">
-              <h2>{this.props.titulo}</h2>
-          <div className="ClientesCSS">
+          <div class="border">
+              <h2>Cliente</h2>
+          <div class="border">
             <ClienteForm
               cliente={this.state.selected}
               clienteChange={this.clienteChange}
               listado ={this.listado}
             />
           </div>
-          <table className="table">
+          <table className="table table-bordered table-hover table-bg">
             <thead>
               <tr>
                  <th>Agente Comercial</th>
@@ -50,15 +48,6 @@ class Clientes extends React.Component {
             </tbody>
           </table>
         </div>)
-      }
-      else {
-        return(
-          <div className="ClientesCSS">
-              <h2>{this.props.titulo}</h2>
-              CARGANDO
-          </div>);  
-      }
-
     }
 
     select(unCliente) {
@@ -66,7 +55,7 @@ class Clientes extends React.Component {
     }
 
     clienteChange(unCliente) {
-      this.listado();
+      this.setState({selected:unCliente});
     }
 
     renderRows() {
