@@ -2,7 +2,6 @@ import React from 'react';
 import { Button, Form, FormGroup, Label, Input} from 'reactstrap';
 import { Multiselect } from 'multiselect-react-dropdown';
 import { Link } from 'react-router-dom';
-import blackfreebackground from '../black-free-background.png'
 var moment = require('moment');
 
 
